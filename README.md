@@ -13,4 +13,5 @@ An SD card must be set in `/dev/mmcblk0`. If you find any trouble, please report
 
 # devuan-rpi-image-script
 SD card image builder is also available here for Devuan 4 Chimaera. Devuan official images are available at https://arm-files.devuan.org/
-You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
+ , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
+ You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
