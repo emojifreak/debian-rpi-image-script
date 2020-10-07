@@ -12,6 +12,10 @@ DEVFILE=/dev/mmcblk0
 #dd if=/dev/zero of=$IMGFILE count=1 seek=`expr 4096 \* 1024 - 1`
 #losetup -P $DEVFILE $IMGFILE
 #losetup -l
+umount -qf ${DEVFILE}p1
+umount -qf ${DEVFILE}p2
+umount -qf ${DEVFILE}p3
+umount -qf ${DEVFILE}p4
 fdisk $DEVFILE <<EOF
 o
 n
@@ -125,7 +129,8 @@ chroot /mnt dpkg-reconfigure tzdata
 chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 #chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
-sed -i 's/.dev.mmcblk0p2/LABEL=RASPIROOT/' /mnt/boot/firmware/cmdline.txt
+sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
+
 
 umount /mnt/boot/firmware/
 umount /mnt
