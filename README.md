@@ -8,4 +8,4 @@ Official SD card images are available at https://raspi.debian.net/ Features prov
 * Choice of keyboard layout
 * Debian 11 Bullseye
 
-An SD card must be set in `/dev/mmcblk0`
+An SD card must be set in `/dev/mmcblk0`. If you find any trouble, please report it as a github issue here.
