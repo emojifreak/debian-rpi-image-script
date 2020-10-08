@@ -16,6 +16,7 @@ SD card image builder is also available here for Devuan 4 Chimaera. Devuan offic
  , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
  You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
  Qestions and comments (not issue reports) can be posted at http://dev1galaxy.org/viewtopic.php?pid=25115
+ The two shell scripts are the same except packages given as an argument to `mmdebstrap`.
 
 # Additional packages
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
