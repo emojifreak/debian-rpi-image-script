@@ -57,7 +57,9 @@ read FSTYPE
 dd of=${DEVFILE}p2 if=/dev/zero count=512
 eval mkfs.${FSTYPE} -L RASPIROOT ${DEVFILE}p2
 
-echo -n "Installed package coverage (apt, required, important, or standard): "
+echo
+echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
+echo -n "select installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
 cat <<EOF
 Explanation of architectures:
