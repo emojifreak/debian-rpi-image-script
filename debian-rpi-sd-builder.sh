@@ -79,7 +79,7 @@ fi
 echo "Selected kernel package is $KERNELPKG."
     
 mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
-mmdebstrap --architectures=$MMDEBARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},udev,kmod,e2fsprogs,btrfs-progs,systemd-sysv,locales,tzdata,openssh-server,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,raspi-firmware,firmware-brcm80211,firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup bullseye /mnt
+mmdebstrap --architectures=$MMDEBARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,raspi-firmware,firmware-brcm80211,firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup bullseye /mnt
 
 mkfs.vfat -v -F 32 -n RASPIFIRM ${DEVFILE}p1
 mount -o async,discard,lazytime,noatime ${DEVFILE}p1 /mnt2
@@ -130,7 +130,6 @@ chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 #chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
-
 
 umount /mnt/boot/firmware/
 umount /mnt

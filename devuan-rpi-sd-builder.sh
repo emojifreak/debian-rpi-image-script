@@ -79,7 +79,7 @@ fi
 echo "Selected kernel package is $KERNELPKG."
     
 mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
-mmdebstrap --architectures=$MMDEBARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},eudev,kmod,e2fsprogs,btrfs-progs,sysvinit-core,locales,tzdata,apt-utils,whiptail,ifupdown,isc-dhcp-client,wpasupplicant,crda,raspi-firmware,firmware-brcm80211,firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup chimaera /mnt http://deb.devuan.org/merged/
+mmdebstrap --architectures=$MMDEBARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,ifupdown,isc-dhcp-client,wpasupplicant,crda,raspi-firmware,firmware-brcm80211,firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup chimaera /mnt http://deb.devuan.org/merged/
 
 mkfs.vfat -v -F 32 -n RASPIFIRM ${DEVFILE}p1
 mount -o async,discard,lazytime,noatime ${DEVFILE}p1 /mnt2
@@ -118,6 +118,8 @@ EOF
     wpa-psk $PSK
 EOF
   fi
+  echo "/etc/network/interfaces is"
+  cat /mnt/etc/network/interfaces
 fi
 
 set -x
