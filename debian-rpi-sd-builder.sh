@@ -57,17 +57,17 @@ read FSTYPE
 dd of=${DEVFILE}p2 if=/dev/zero count=512
 eval mkfs.${FSTYPE} -L RASPIROOT ${DEVFILE}p2
 
-echo -n "Variant of mmdebstrap (apt, required, important, or standard): "
+echo -n "Installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
 cat <<EOF
 Explanation of architectures:
-armeb for Raspberry Pi Zero, Zero W and 1,
+armel for Raspberry Pi Zero, Zero W and 1,
 armhf for Raspberry Pi 2,
 arm64 for Raspberry Pi 3 and 4.
 32-bit kernel is unsupported on 64-bit ARM CPUs.
 EOF
-#echo -n 'Architecture ("armeb", "armhf", "arm64", or "armhf,arm64"): '
-echo -n 'Architecture ("armeb", "armhf", or "arm64"): '
+#echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
+echo -n 'Architecture ("armel", "armhf", or "arm64"): '
 read MMDEBARCH
 if [ $MMDEBARCH == armeb ]; then
     KERNELPKG=linux-image-rpi
