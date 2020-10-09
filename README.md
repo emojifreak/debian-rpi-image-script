@@ -22,3 +22,17 @@ SD card image builder is also available here for Devuan 4 Chimaera. Devuan offic
 # Additional packages
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
 * Graphical User Interface can be installed by `tasksel`.
+
+# 32-bit executables on 64-bit linux-image-arm64 kernel
+`linux-image-arm64` 64-bit kernel can run `armhf` 32-bit executables. If `armhf,arm64` is given to the above scripts as
+the target architecture in place of `armhf` or `arm64`,
+then an SD card with 32-bit executables and 64-bit kernel will be built. But
+[it does not boot](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=971748). To make it bootable,
+do the following steps as root after running the above script:
+
+1. `mount /dev/mmcblk0p2 /mnt`
+2. `mount /dev/mmcblk0p1 /mnt/boot/firmware`
+3. `echo arm_64bit=1 >>/mnt/boot/firmware/config.txt
+4. `cp -p /mnt/usr/lib/linux-image-*-arm64/broadcom/bcm*rpi*.dtb /mnt/boot/firmware`
+5. `umount /mnt/boot/firmware`
+6. `umount /mnt`
