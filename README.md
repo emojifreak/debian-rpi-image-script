@@ -32,7 +32,7 @@ do the following steps as root after running the above script:
 
 1. `mount /dev/mmcblk0p2 /mnt`
 2. `mount /dev/mmcblk0p1 /mnt/boot/firmware`
-3. `echo arm_64bit=1 >>/mnt/boot/firmware/config.txt
+3. `echo arm_64bit=1 >>/mnt/boot/firmware/config.txt`
 4. `cp -p /mnt/usr/lib/linux-image-*-arm64/broadcom/bcm*rpi*.dtb /mnt/boot/firmware`
 5. `umount /mnt/boot/firmware`
 6. `umount /mnt`
