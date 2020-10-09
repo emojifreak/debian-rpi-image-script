@@ -37,7 +37,7 @@ p
 w
 EOF
 partprobe $DEVFILE
-if [ $SWAPGB -gt 0 ]; then
+if [ "$SWAPGB" -gt 0 ]; then
   fdisk $DEVFILE <<EOF
 n
 p
@@ -73,9 +73,9 @@ EOF
 #echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
 echo -n 'Architecture ("armel", "armhf", or "arm64"): '
 read MMDEBARCH
-if [ $MMDEBARCH == armeb ]; then
+if [ "$MMDEBARCH" = armel ]; then
     KERNELPKG=linux-image-rpi
-elif [ $MMDEBARCH == armhf ]; then
+elif [ "$MMDEBARCH" = armhf ]; then
     KERNELPKG=linux-image-armmp-lpae
 else
     KERNELPKG=linux-image-arm64
@@ -99,7 +99,7 @@ cat >/mnt/etc/fstab <<EOF
 LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,discard 0 1
 LABEL=RASPIFIRM /boot/firmware vfat rw,async,lazytime,discard 0 2
 EOF
-if [ $SWAPGB -gt 0 ]; then
+if [ "$SWAPGB" -gt 0 ]; then
   echo 'LABEL=RASPISWAP none swap sw,discard 0 0' >>/mnt/etc/fstab
 fi
 
@@ -107,12 +107,12 @@ echo "IPv4 DHCP is assumed. Otherwise edit /etc/network/interfaces"
 echo -n "Name of the primary network interface (eth0, wlan0, none): "
 read NETIF
 
-if [ $NETIF != none ]; then
+if [ "$NETIF" != none ]; then
   cat >>/mnt/etc/network/interfaces <<EOF
 auto $NETIF
 iface $NETIF inet dhcp
 EOF
-  if [ $NETIF == wlan0 ]; then
+  if [ "$NETIF" = wlan0 ]; then
     echo -n "Your Wireless LAN SSID: "
     read SSID
     echo -n "Your Wireless LAN passphrease: "
