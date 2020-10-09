@@ -16,6 +16,8 @@ umount -qf ${DEVFILE}p1
 umount -qf ${DEVFILE}p2
 umount -qf ${DEVFILE}p3
 umount -qf ${DEVFILE}p4
+dd of=${DEVFILE} if=/dev/zero count=512
+partprobe $DEVFILE
 fdisk $DEVFILE <<EOF
 o
 n
@@ -34,7 +36,7 @@ p
 p
 w
 EOF
-partx $DEVFILE
+partprobe $DEVFILE
 if [ $SWAPGB -gt 0 ]; then
   fdisk $DEVFILE <<EOF
 n
@@ -48,7 +50,7 @@ t
 p
 w
 EOF
-partx $DEVFILE
+  partprobe $DEVFILE
   mkswap -f -L RASPISWAP ${DEVFILE}p3
 fi
    
