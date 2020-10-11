@@ -20,6 +20,7 @@ SD card image builder is also available here for Devuan 4 Chimaera. Devuan offic
  , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
  You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
  Devuan 3 Beowulf can probably be installed by replacing `chimaera` by `beowulf` and `raspi-firmware` by `raspi3-firmware` except RPi4.
+ RPi4 Beowulf needs linux-image-arm64 from beowulf-backports. 
  Qestions and comments (not issue reports) can be posted at http://dev1galaxy.org/viewtopic.php?pid=25115
  **The two shell scripts are the same except packages given as an argument to `mmdebstrap`,**
  namely, `systemd-sysv,udev` versus `sysvinit-core,eudev`.
