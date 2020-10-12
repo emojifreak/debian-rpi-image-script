@@ -10,7 +10,7 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 * Choice of keyboard layout
 * Debian 11 Bullseye
 
-An SD card must be set in `/dev/mmcblk0`. If you find **any trouble**, please report it as **a github issue here**.
+An SD card must be set in `/dev/mmcblk0` or change the script. If you find **any trouble**, please report it as **a github issue here**.
 Debian 10 Buster can probably be installed by replacing `bullseye` by `buster` and `raspi-firmware` by `raspi3-firmware` except RPi4.
 RPi4 Buster needs linux-image-arm64, firmware-brcm80211 and raspi3-firmware from Debian Bullseye.
 Another build shell script is available at https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD
