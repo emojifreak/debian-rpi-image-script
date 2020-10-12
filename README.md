@@ -12,7 +12,7 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 
 An SD card must be set in `/dev/mmcblk0`. If you find **any trouble**, please report it as **a github issue here**.
 Debian 10 Buster can probably be installed by replacing `bullseye` by `buster` and `raspi-firmware` by `raspi3-firmware` except RPi4.
-RPi4 Buster needs [linux-image-arm64 from buster-backports](https://packages.debian.org/buster-backports/linux-image-arm64).
+RPi4 Buster needs linux-image-arm64, firmware-brcm80211 and raspi3-firmware from Debian Bullseye.
 Another build shell script is available at https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD
 
 # devuan-rpi-image-script
@@ -20,7 +20,7 @@ SD card image builder is also available here for Devuan 4 Chimaera. Devuan offic
  , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
  You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
  Devuan 3 Beowulf can probably be installed by replacing `chimaera` by `beowulf` and `raspi-firmware` by `raspi3-firmware` except RPi4.
- RPi4 Beowulf needs linux-image-arm64 from beowulf-backports. 
+ RPi4 Beowulf needs linux-image-arm64, firmware-brcm80211 and raspi3-firmware from Devuan Chimaera.
  Qestions and comments (not issue reports) can be posted at http://dev1galaxy.org/viewtopic.php?pid=25115
  **The two shell scripts are the same except packages given as an argument to `mmdebstrap`,**
  namely, `systemd-sysv,udev` versus `sysvinit-core,eudev`.
