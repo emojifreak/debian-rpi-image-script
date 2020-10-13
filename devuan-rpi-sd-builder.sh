@@ -112,9 +112,9 @@ mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
 ) | (
   set -x
   if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup  "$MMSUITE" /mnt -
+    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
   else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup  "$MMSUITE" /mnt -
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
   fi
 )
 
@@ -166,6 +166,8 @@ chroot /mnt dpkg-reconfigure tzdata
 chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 #chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
+set +x
+
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
 if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
   mv /mnt/etc/apt/apt.conf.d/99mmdebstrap /mnt/etc/apt/apt.conf
@@ -173,3 +175,5 @@ fi
 
 umount /mnt/boot/firmware/
 umount /mnt
+echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
+exit 0
