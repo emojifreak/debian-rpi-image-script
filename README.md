@@ -1,14 +1,16 @@
+Warning: You need [recent versions of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will fail.
+
 # debian-rpi-image-script
 Shell script to build Debian SD card image booting the Raspberry Pi series.
 Official Debian SD card images are available at https://raspi.debian.net/ Features provided by this shell script are
 
+* Choice of Debian 10 Buster, 11 Bullseye and later.
 * Choice of package coverage according to the [package priority](https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities)
 * btrfs and ext4 filesystems can be chosen as /
 * Setting the size of a swap partition (or lack of it)
 * Choice of timezone and locale
 * Choice of wireless SSID
 * Choice of keyboard layout
-* Debian 11 Bullseye
 
 An SD card must be set in `/dev/mmcblk0` or change the script. If you find **any trouble**, please report it as **a github issue here**.
 Debian 10 Buster can probably be installed by replacing `bullseye` by `buster` and `raspi-firmware` by `raspi3-firmware` except RPi4.
@@ -16,14 +18,15 @@ RPi4 Buster needs linux-image-arm64, firmware-brcm80211 and raspi3-firmware from
 Another build shell script is available at https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD
 
 # devuan-rpi-image-script
-SD card image builder is also available here for Devuan 4 Chimaera. Devuan official images are available at https://arm-files.devuan.org/
+SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
  , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
  You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
  Devuan 3 Beowulf can probably be installed by replacing `chimaera` by `beowulf` and `raspi-firmware` by `raspi3-firmware` except RPi4.
  RPi4 Beowulf needs linux-image-arm64, firmware-brcm80211 and raspi3-firmware from Devuan Chimaera.
  Qestions and comments (not issue reports) can be posted at http://dev1galaxy.org/viewtopic.php?pid=25115
  **The two shell scripts are the same except packages given as an argument to `mmdebstrap`,**
- namely, `systemd-sysv,udev` versus `sysvinit-core,eudev`.
+ namely, `systemd-sysv,udev,debian-archive-keyring` versus `sysvinit-core,eudev,devuan-keyring`.
+ Hardware clock can be correctly set by `sntp -S pool.ntp.org` as root.
 
 # Additional packages
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
