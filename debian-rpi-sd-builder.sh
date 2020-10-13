@@ -7,7 +7,7 @@ echo -n "Swap partition size in GB, 0 means no swap partition: "
 read SWAPGB
 
 DEVFILE=/dev/mmcblk0
-#LOOPFILE=/dev/loop2
+#DEVFILE=/dev/loop2
 #rm $IMGFILE
 #dd if=/dev/zero of=$IMGFILE count=1 seek=`expr 4096 \* 1024 - 1`
 #losetup -P $DEVFILE $IMGFILE
@@ -59,10 +59,8 @@ read FSTYPE
 dd of=${DEVFILE}p2 if=/dev/zero count=512
 eval mkfs.${FSTYPE} -L RASPIROOT ${DEVFILE}p2
 
-echo
-echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
-echo -n "select installed package coverage (apt, required, important, or standard): "
-read MMVARIANT
+echo -n "Debian Suite (buster, bullseye or sid): "
+read MMSUITE
 cat <<EOF
 Explanation of architectures:
 armel for Raspberry Pi Zero, Zero W and 1,
@@ -72,18 +70,53 @@ arm64 for Raspberry Pi 3 and 4.
 EOF
 #echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
 echo -n 'Architecture ("armel", "armhf", or "arm64"): '
-read MMDEBARCH
-if [ "$MMDEBARCH" = armel ]; then
-    KERNELPKG=linux-image-rpi
-elif [ "$MMDEBARCH" = armhf ]; then
-    KERNELPKG=linux-image-armmp-lpae
+read MMARCH
+echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
+echo -n "select installed package coverage (apt, required, important, or standard): "
+read MMVARIANT
+
+if [ "$MMSUITE" = buster ]; then
+  if echo "$MMARCH" | grep -q arm64; then
+    RASPIFIRMWARE=raspi-firmware/bullseye,firmware-brcm80211/buster-backports
+  else  
+    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211
+  fi
+  else
+  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211
+fi
+
+if [ "$MMARCH" = armel ]; then
+  KERNELPKG=linux-image-rpi
+elif [ "$MMARCH" = armhf ]; then
+  KERNELPKG=linux-image-armmp-lpae
 else
+  if [ "$MMSUITE" = buster ]; then
+    KERNELPKG=linux-image-arm64/buster-backports
+  else
     KERNELPKG=linux-image-arm64
+  fi
 fi
 echo "Selected kernel package is $KERNELPKG."
     
 mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
-mmdebstrap --architectures=$MMDEBARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,raspi-firmware,firmware-brcm80211,firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup bullseye /mnt
+(
+  echo "deb http://deb.debian.org/debian/ $MMSUITE main non-free contrib"
+  if [ "$MMSUITE" = buster ]; then
+    echo "deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free"
+    echo "deb http://deb.debian.org/debian/ buster-updates main contrib non-free"
+    if echo "$MMARCH" | grep -q arm64; then
+      echo "deb http://deb.debian.org/debian/ buster-backports main contrib non-free"
+      echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free"
+    fi
+  fi
+) | (
+  set -x
+  if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
+    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup  "$MMSUITE" /mnt -
+  else
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup  "$MMSUITE" /mnt -
+  fi
+)
 
 mkfs.vfat -v -F 32 -n RASPIFIRM ${DEVFILE}p1
 mount -o async,discard,lazytime,noatime ${DEVFILE}p1 /mnt2
@@ -134,6 +167,9 @@ chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 #chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
+if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
+  mv /mnt/etc/apt/apt.conf.d/99mmdebstrap /mnt/etc/apt/apt.conf
+fi
 
 umount /mnt/boot/firmware/
 umount /mnt
