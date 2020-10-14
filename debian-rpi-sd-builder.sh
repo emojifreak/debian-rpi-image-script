@@ -71,13 +71,15 @@ EOF
 #echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
 echo -n 'Architecture ("armel", "armhf", or "arm64"): '
 read MMARCH
+echo
+echo "Warning: Due to mmdebstrap bug, standard cannot be chosen with buster arm64"
 echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
 echo -n "select installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
 
 if [ "$MMSUITE" = buster ]; then
   if echo "$MMARCH" | grep -q arm64; then
-    RASPIFIRMWARE=raspi-firmware/bullseye,firmware-brcm80211/buster-backports
+    RASPIFIRMWARE=raspi-firmware/bullseye,firmware-brcm80211/buster-backports,wireless-regdb/buster-backports
   else  
     RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211
   fi
@@ -165,10 +167,21 @@ chroot /mnt passwd root
 chroot /mnt dpkg-reconfigure tzdata
 chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
-#chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
+chroot /mnt fake-hwclock save
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
+if [ "$MMSUITE" != buster ]; then
+  chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
+fi
+set +x
+
 if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
   mv /mnt/etc/apt/apt.conf.d/99mmdebstrap /mnt/etc/apt/apt.conf
+  cat > /mnt/etc/apt/sources.list <<EOF
+deb http://deb.debian.org/debian/ $MMSUITE main non-free contrib
+deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+deb http://deb.debian.org/debian/ buster-updates main contrib non-free
+deb http://deb.debian.org/debian/ buster-backports main contrib non-free
+EOF
 fi
 
 umount /mnt/boot/firmware/

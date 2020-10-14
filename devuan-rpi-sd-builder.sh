@@ -77,7 +77,7 @@ read MMVARIANT
 
 if [ "$MMSUITE" = beowulf ]; then
   if echo "$MMARCH" | grep -q arm64; then
-    RASPIFIRMWARE=raspi-firmware/chimaera,firmware-brcm80211/beowulf-backports
+    RASPIFIRMWARE=raspi-firmware/chimaera,firmware-brcm80211/beowulf-backports,wireless-regdb/beowulf-backports
   else  
     RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211
   fi
@@ -165,14 +165,26 @@ chroot /mnt passwd root
 chroot /mnt dpkg-reconfigure tzdata
 chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
-#chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
+chroot /mnt fake-hwclock save
+if [ "$MMSUITE" != beowulf ]; then
+  chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
+fi
 set +x
 
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
 if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
   mv /mnt/etc/apt/apt.conf.d/99mmdebstrap /mnt/etc/apt/apt.conf
+  cat > /mnt/etc/apt/sources.list <<EOF
+deb http://deb.devuan.org/merged/ $MMSUITE main non-free contrib
+deb http://deb.devuan.org/merged/ beowulf-updates main contrib non-free
+deb http://deb.devuan.org/merged/ beowulf-security main contrib non-free
+deb http://deb.devuan.org/merged/ beowulf-backports main contrib non-free
+EOF
 fi
 
+cat >>/mnt/root/.profile <<'EOF'
+echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
+EOF
 umount /mnt/boot/firmware/
 umount /mnt
 echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
