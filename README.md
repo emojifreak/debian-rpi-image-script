@@ -35,16 +35,16 @@ then an SD card with 32-bit executables and 64-bit kernel will be built. But
 [it does not boot](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=971748). To make it bootable,
 do the following steps as root after running the above script:
 
-# Other image builders
-* https://github.com/pyavitz/rpi-img-builder (For Ubuntu, Debian and Devuan)
-* https://raspi.debian.net/daily-images/ (for Debian, of course)
-* https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD (for Debian, RPi3)
-
-If you find another builder not listed above, please open a github issue.
-
 1. `mount /dev/mmcblk0p2 /mnt`
 2. `mount /dev/mmcblk0p1 /mnt/boot/firmware`
 3. `echo arm_64bit=1 >>/mnt/boot/firmware/config.txt`
 4. `cp -p /mnt/usr/lib/linux-image-*-arm64/broadcom/bcm*rpi*.dtb /mnt/boot/firmware`
 5. `umount /mnt/boot/firmware`
 6. `umount /mnt`
+
+# Other image builders
+* https://github.com/pyavitz/rpi-img-builder (For Ubuntu, Debian and Devuan)
+* https://raspi.debian.net/daily-images/ (for Debian, of course)
+* https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD (for Debian, RPi3)
+
+If you find another builder not listed above, please open a github issue. Where is the Ubuntu official builder?
