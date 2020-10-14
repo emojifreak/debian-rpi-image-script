@@ -13,7 +13,7 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 * Choice of keyboard layout
 
 An SD card must be set in `/dev/mmcblk0` or change the script. If you find **any trouble**, please report it as **a github issue here**.
-Another build shell script is available at https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD
+Other build shell scripts are listed below.
 
 # devuan-rpi-image-script
 SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
