@@ -1,4 +1,4 @@
-Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will fail.
+Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will probably fail.
 
 # debian-rpi-image-script
 Shell script to build Debian SD card image booting the Raspberry Pi series.
