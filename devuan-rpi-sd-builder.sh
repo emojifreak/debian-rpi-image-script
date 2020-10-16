@@ -79,10 +79,10 @@ if [ "$MMSUITE" = beowulf ]; then
   if echo "$MMARCH" | grep -q arm64; then
     RASPIFIRMWARE=raspi-firmware/chimaera,firmware-brcm80211/beowulf-backports,wireless-regdb/beowulf-backports
   else  
-    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211
+    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211,wireless-regdb
   fi
   else
-  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211
+  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211,wireless-regdb
 fi
 
 if [ "$MMARCH" = armel ]; then
@@ -112,9 +112,9 @@ mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
 ) | (
   set -x
   if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
+    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
   else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
   fi
 )
 
@@ -184,6 +184,7 @@ fi
 
 cat >>/mnt/root/.profile <<'EOF'
 echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
+echo 'You should set your country to /etc/default/crda.'
 EOF
 umount /mnt/boot/firmware/
 umount /mnt

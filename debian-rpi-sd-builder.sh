@@ -81,10 +81,10 @@ if [ "$MMSUITE" = buster ]; then
   if echo "$MMARCH" | grep -q arm64; then
     RASPIFIRMWARE=raspi-firmware/bullseye,firmware-brcm80211/buster-backports,wireless-regdb/buster-backports
   else  
-    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211
+    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211,wireless-regdb
   fi
   else
-  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211
+  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211,wireless-regdb
 fi
 
 if [ "$MMARCH" = armel ]; then
@@ -114,9 +114,9 @@ mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
 ) | (
   set -x
   if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
+    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
   else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
   fi
 )
 
@@ -183,6 +183,10 @@ deb http://deb.debian.org/debian/ buster-updates main contrib non-free
 deb http://deb.debian.org/debian/ buster-backports main contrib non-free
 EOF
 fi
+
+cat >>/mnt/root/.profile <<'EOF'
+echo 'You should set your country to /etc/default/crda.'
+EOF
 
 umount /mnt/boot/firmware/
 umount /mnt
