@@ -99,8 +99,12 @@ else
   fi
 fi
 echo "Selected kernel package is $KERNELPKG."
-    
-mount -o async,lazytime,discard,noatime ${DEVFILE}p2 /mnt
+
+if [ $FSTYPE = btrfs ]; then
+  mount -o ssd,async,lazytime,discard,noatime,autodefrag,nobarrier,commit=3600,compress-force=lzo ${DEVFILE}p2 /mnt
+elif  [ $FSTYPE = ext4 ]; then
+  mount -o async,lazytime,discard,noatime,nobarrier,commit=3600,delalloc,noauto_da_alloc,data=writeback ${DEVFILE}p2 /mnt
+fi
 (
   echo "deb http://deb.debian.org/debian/ $MMSUITE main non-free contrib"
   if [ "$MMSUITE" = buster ]; then
