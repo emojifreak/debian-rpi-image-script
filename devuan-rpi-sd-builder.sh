@@ -71,6 +71,7 @@ EOF
 #echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
 echo -n 'Architecture ("armel", "armhf", or "arm64"): '
 read MMARCH
+echo "Warning: Due to mmdebstrap bug, standard cannot be chosen with buster arm64"
 echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
 echo -n "select installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
