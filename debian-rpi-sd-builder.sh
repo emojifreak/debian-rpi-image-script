@@ -100,6 +100,20 @@ else
 fi
 echo "Selected kernel package is $KERNELPKG."
 
+echo
+echo -n "Choose network configurator (ifupdown, network-manager, systemd-networkd, none): "
+read NETWORK
+
+if [ $NETWORK = ifupdown ]; then
+  NETPKG=ifupdown,isc-dhcp-client,crda
+elif [ $NETWORK = network-manager ]; then
+  NETPKG=network-manager,crda
+elif [ $NETWORK = systemd-networkd ]; then
+  NETPKG=systemd
+else
+  NETPKG=iproute2,iw
+fi
+
 if [ $FSTYPE = btrfs ]; then
   mount -o ssd,async,lazytime,discard,noatime,autodefrag,nobarrier,commit=3600,compress-force=lzo ${DEVFILE}p2 /mnt
 elif  [ $FSTYPE = ext4 ]; then
@@ -118,9 +132,9 @@ fi
 ) | (
   set -x
   if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
+    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
   else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" /mnt -
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" /mnt -
   fi
 )
 
@@ -142,27 +156,103 @@ if [ "$SWAPGB" -gt 0 ]; then
   echo 'LABEL=RASPISWAP none swap sw,discard 0 0' >>/mnt/etc/fstab
 fi
 
-echo "IPv4 DHCP is assumed. Otherwise edit /etc/network/interfaces"
-echo -n "Name of the primary network interface (eth0, wlan0, none): "
-read NETIF
+if [ $NETWORK != none ]; then 
+  echo "IPv4 DHCP is assumed."
+  echo -n "Name of the primary network interface (eth0, wlan0): "
+  read NETIF
 
-if [ "$NETIF" != none ]; then
-  cat >>/mnt/etc/network/interfaces <<EOF
-auto $NETIF
-iface $NETIF inet dhcp
-EOF
-  if [ "$NETIF" = wlan0 ]; then
+  if [ $NETIF = wlan0 ]; then
+    echo "As https://wiki.archlinux.org/index.php/Network_configuration/Wireless#Respecting_the_regulatory_domain"
+    echo -n "Choose your wireless regulatory domain (hit Enter if unsuer): "
+    read REGDOM
     echo -n "Your Wireless LAN SSID: "
     read SSID
     echo -n "Your Wireless LAN passphrease: "
     read PSK
+  fi
+
+  if [ $NETWORK = ifupdown ]; then
+    NETCONFIG="Network configurations can be changed by /etc/network/interfaces"
     cat >>/mnt/etc/network/interfaces <<EOF
+auto $NETIF
+iface $NETIF inet dhcp
+EOF
+    if [ "$NETIF" = wlan0 ]; then
+      NETCONFIG="${NETCONFIG} and /etc/default/crda"
+      cat >>/mnt/etc/network/interfaces <<EOF
     wpa-ssid $SSID
     wpa-psk $PSK
 EOF
+      if [ -n "$REGDOM" ]; then
+	echo "REGDOMAIN=$REGDOM" >>/mnt/etc/default/crda
+      fi
+    fi
+    echo "/etc/network/interfaces is"
+    cat /mnt/etc/network/interfaces
+  elif [ $NETWORK = network-manager ]; then
+    NETCONFIG="Network configurations can be changed by nmtui"
+    if [ "$NETIF" = wlan0 ]; then
+      NETCONFIG="${NETCONFIG} and /etc/default/crda"
+      UUID=`uuidgen`
+      cat >>"/mnt/etc/NetworkManager/system-connections/${SSID}.nmconnection" <<EOF
+[connection]
+id=$SSID
+uuid=${UUID}
+type=wifi
+interface-name=wlan0
+permissions=
+
+[wifi]
+mac-address-blacklist=
+mode=infrastructure
+ssid=$SSID
+
+[wifi-security]
+key-mgmt=wpa-psk
+psk=$PSK
+
+[ipv4]
+dns-search=
+method=auto
+
+[ipv6]
+addr-gen-mode=stable-privacy
+dns-search=
+method=auto
+
+[proxy]
+EOF
+      chmod 600 "/mnt/etc/NetworkManager/system-connections/${SSID}.nmconnection"
+      if [ -n "$REGDOM" ]; then
+	echo "REGDOMAIN=$REGDOM" >>/mnt/etc/default/crda
+      fi
+    fi
+  elif [ $NETWORK = systemd-networkd ]; then
+    NETCONFIG="Network configurations can be changed by /etc/systemd/network/${NETIF}.network"
+    cat >/mnt/etc/systemd/network/${NETIF}.network <<EOF
+[Match]
+Name=${NETIF}
+
+[Network]
+DHCP=yes
+EOF
+    chroot /mnt systemctl enable systemd-networkd
+    if [ $NETIF = wlan0 ]; then
+      NETCONFIG="${NETCONFIG} and /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
+      if [ -n "$REGDOM" ]; then
+	echo "country=$REGDOM" >/mnt/etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+      fi
+      cat >>/mnt/etc/wpa_supplicant/wpa_supplicant-wlan0.conf <<EOF
+network={
+  ssid="${SSID}"
+  scan_ssid=1
+  key_mgmt=WPA-PSK
+  psk="${PSK}"
+}
+EOF
+      chroot /mnt systemctl enable wpa_supplicant@wlan0
+    fi
   fi
-  echo "/etc/network/interfaces is"
-  cat /mnt/etc/network/interfaces
 fi
 
 set -x
@@ -188,8 +278,8 @@ deb http://deb.debian.org/debian/ buster-backports main contrib non-free
 EOF
 fi
 
-cat >>/mnt/root/.profile <<'EOF'
-echo 'You should set your country to /etc/default/crda.'
+cat >>/mnt/root/.profile <<EOF
+echo "$NETCONFIG"
 EOF
 
 umount /mnt/boot/firmware/
