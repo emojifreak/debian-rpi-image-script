@@ -199,7 +199,6 @@ EOF
 id=$SSID
 uuid=${UUID}
 type=wifi
-interface-name=wlan0
 permissions=
 
 [wifi]
@@ -266,6 +265,10 @@ sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
 if [ "$MMSUITE" != buster ]; then
   chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
 fi
+if [ $NETWORK = network-manager -o $NETWORK = systemd-networkd ]; then
+  chroot /mnt apt-get -y --purge --autoremove purge ifupdown
+  rm -f /mnt/etc/network/interfaces
+fi  
 set +x
 
 if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
