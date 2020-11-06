@@ -148,10 +148,17 @@ mount -o async,discard,lazytime,noatime ${DEVFILE}p1 /mnt/boot/firmware
 echo -n "Choose hostname: "
 read YOURHOSTNAME
 echo "$YOURHOSTNAME" >/mnt/etc/hostname
-cat >/mnt/etc/fstab <<EOF
+if [ ${FSTYPE} = btrfs ]; then
+  cat >/mnt/etc/fstab <<EOF
+LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,discard,compress-force=lzo 0 1
+LABEL=RASPIFIRM /boot/firmware vfat rw,async,lazytime,discard 0 2
+EOF
+else
+  cat >/mnt/etc/fstab <<EOF
 LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,discard 0 1
 LABEL=RASPIFIRM /boot/firmware vfat rw,async,lazytime,discard 0 2
 EOF
+fi
 if [ "$SWAPGB" -gt 0 ]; then
   echo 'LABEL=RASPISWAP none swap sw,discard 0 0' >>/mnt/etc/fstab
 fi
