@@ -9,7 +9,7 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 * Choice of Debian 10 Buster, 11 Bullseye and later.
 * Choice among ifupdown, Network Manager and systemd-networkd for network configuration
 * Choice of package coverage according to the [package priority](https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities)
-* btrfs and ext4 filesystems can be chosen as /
+* btrfs and ext4 filesystems can be chosen as /. btrfs **compress-force=lzo** significantly increase the storage speed and size.
 * Setting the size of a swap partition (or lack of it)
 * Choice of timezone and locale
 * Choice of wireless SSID
