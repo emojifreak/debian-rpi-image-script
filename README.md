@@ -1,3 +1,5 @@
+**Warning: [bug in raspi-firmware](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=975943) makes the built image unbootable with 64-bit kernel, please add arm_64bit=1 to config.txt by hand.**
+
 Built images are available at https://drive.google.com/drive/folders/1-L5pT4tn7wfxp9urjnIDL2SvAbxO8Vl6?usp=sharing
 
 Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will probably fail.
