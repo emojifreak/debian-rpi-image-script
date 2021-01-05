@@ -79,7 +79,7 @@ read MMVARIANT
 
 if [ "$MMSUITE" = beowulf ]; then
   if echo "$MMARCH" | grep -q arm64; then
-    RASPIFIRMWARE=raspi-firmware/chimaera,firmware-brcm80211/beowulf-backports,wireless-regdb/beowulf-backports
+    RASPIFIRMWARE=raspi-firmware/beowulf-backports,firmware-brcm80211/beowulf-backports,wireless-regdb/beowulf-backports
   else  
     RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211,wireless-regdb
   fi
@@ -112,7 +112,6 @@ fi
     echo "deb http://deb.devuan.org/merged/ beowulf-security main contrib non-free"
     if echo "$MMARCH" | grep -q arm64; then
       echo "deb http://deb.devuan.org/merged/ beowulf-backports main contrib non-free"
-      echo "deb http://deb.devuan.org/merged/ chimaera main contrib non-free"
     fi
   fi
 ) | (

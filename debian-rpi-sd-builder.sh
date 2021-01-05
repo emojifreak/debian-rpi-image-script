@@ -79,7 +79,7 @@ read MMVARIANT
 
 if [ "$MMSUITE" = buster ]; then
   if echo "$MMARCH" | grep -q arm64; then
-    RASPIFIRMWARE=raspi-firmware/bullseye,firmware-brcm80211/buster-backports,wireless-regdb/buster-backports
+    RASPIFIRMWARE=raspi-firmware/buster-backports,firmware-brcm80211/buster-backports,wireless-regdb/buster-backports
   else  
     RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211,wireless-regdb
   fi
@@ -126,7 +126,6 @@ fi
     echo "deb http://deb.debian.org/debian/ buster-updates main contrib non-free"
     if echo "$MMARCH" | grep -q arm64; then
       echo "deb http://deb.debian.org/debian/ buster-backports main contrib non-free"
-      echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free"
     fi
   fi
 ) | (
