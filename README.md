@@ -24,7 +24,6 @@ Other build shell scripts are listed below.
 SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
 , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
 You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
-Qestions and comments (not issue reports) can be posted at http://dev1galaxy.org/viewtopic.php?pid=25115
 **The two shell scripts are similar except packages given as an argument to `mmdebstrap`,**
 namely, `systemd-sysv,udev,debian-archive-keyring` versus `sysvinit-core,eudev,devuan-keyring,sntp`.
 Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
