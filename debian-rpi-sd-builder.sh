@@ -268,6 +268,9 @@ chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 chroot /mnt fake-hwclock save
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
+echo 'disable_fw_kms_setup=1' >>/mnt/boot/firmware/config.txt
+echo 'disable_fw_kms_setup=1' >>/mnt/etc/default/raspi-firmware-custom
+
 if [ "$MMSUITE" != buster ]; then
   chroot /mnt apt-get -y --purge --autoremove purge python2.7-minimal
 fi
