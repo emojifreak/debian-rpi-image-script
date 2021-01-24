@@ -268,6 +268,7 @@ chroot /mnt dpkg-reconfigure locales
 chroot /mnt dpkg-reconfigure keyboard-configuration
 chroot /mnt fake-hwclock save
 sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
+sed -i "s|cma=64M||" /mnt/boot/firmware/cmdline.txt
 echo 'disable_fw_kms_setup=1' >>/mnt/boot/firmware/config.txt
 echo 'disable_fw_kms_setup=1' >>/mnt/etc/default/raspi-firmware-custom
 
