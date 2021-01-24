@@ -37,6 +37,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * But [it sometimes garbles display output](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980785). `disable_fw_kms_setup=1` in `config.txt` often supress this symptom. If `disable_fw_kms_setup=1` does not help, patched kernel package is available at http://153.240.174.134:64193/kernel-deb-5.9/
 * [`gdm3` display manager and gnome session fail because of insufficient CMA](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980536). Adding `cma=192M@256M` to `cmdline.txt` fixes this symptom.
 * [Boot from USB is impossible](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977694) unlike Linux 5.9. Kernel package capable of USB boot is available at http://153.240.174.134:64193/kernel-deb-5.9/
+* Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.
 
 # 32-bit executables on 64-bit linux-image-arm64 kernel
 `linux-image-arm64` 64-bit kernel can run `armhf` 32-bit executables. If `armhf,arm64` is given to the above scripts as
