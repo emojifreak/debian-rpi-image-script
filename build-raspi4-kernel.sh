@@ -77,7 +77,7 @@ EOF
 
 xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
 cat >>.config <<'EOF'
-CONFIG_LOCALVERSION="raspi4"
+CONFIG_LOCALVERSION="-raspi4"
 CONFIG_RESET_RASPBERRYPI=y
 CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
 CONFIG_SENSORS_RASPBERRYPI_HWMON=y
