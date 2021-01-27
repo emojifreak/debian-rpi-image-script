@@ -58,5 +58,6 @@ do the following steps as root after running the above script:
 * https://github.com/pyavitz/rpi-img-builder (For Ubuntu, Debian and Devuan)
 * https://raspi.debian.net/daily-images/ (for Debian, of course)
 * https://evolvis.org/plugins/scmgit/cgi-bin/gitweb.cgi?p=shellsnippets/shellsnippets.git;a=blob;f=posix/mkrpi3b%2Bimg.sh;hb=HEAD (for Debian, RPi3)
+* https://github.com/debian-pi/raspbian-ua-netinst
 
 If you find another builder not listed above, please open a github issue. Where is the Ubuntu official builder?
