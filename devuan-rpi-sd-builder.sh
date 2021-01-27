@@ -68,11 +68,11 @@ armhf for Raspberry Pi 2,
 arm64 for Raspberry Pi 3 and 4.
 32-bit kernel is unsupported on 64-bit ARM CPUs.
 EOF
-#echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
-echo -n 'Architecture ("armel", "armhf", or "arm64"): '
+echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
+#echo -n 'Architecture ("armel", "armhf", or "arm64"): '
 read MMARCH
 echo
-echo "Warning: Due to mmdebstrap bug, standard cannot be chosen with buster arm64"
+echo "Warning: Due to mmdebstrap bug, standard cannot be chosen with beowulf arm64"
 echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities"
 echo -n "select installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
@@ -187,6 +187,12 @@ sed -i "s|${DEVFILE}p2|LABEL=RASPIROOT|" /mnt/boot/firmware/cmdline.txt
 sed -i "s|cma=64M||" /mnt/boot/firmware/cmdline.txt
 echo 'disable_fw_kms_setup=1' >>/mnt/boot/firmware/config.txt
 echo 'disable_fw_kms_setup=1' >>/mnt/etc/default/raspi-firmware-custom
+echo "rootfstype=$FSTYPE" >/mnt/etc/default/raspi-extra-cmdline
+
+cat >>/mnt/etc/modules <<EOF
+raspberrypi_hwmon
+raspberrypi_cpufreq
+EOF
 
 if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
   mv /mnt/etc/apt/apt.conf.d/99mmdebstrap /mnt/etc/apt/apt.conf
