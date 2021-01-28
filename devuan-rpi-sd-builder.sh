@@ -253,13 +253,20 @@ chroot ${MNTROOT} fake-hwclock save
 echo "rootfstype=$FSTYPE" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
 echo 'ROOTPART=LABEL=RASPIROOT' >>${MNTROOT}/etc/default/raspi-firmware
+if echo $MMARCH | fgrep -q arm64; then
+  echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
+fi
+
 cat >>${MNTROOT}/etc/initramfs-tools/modules <<EOF
 reset_raspberrypi
 raspberrypi_cpufreq
 raspberrypi_hwmon
 EOF
-if echo $MMARCH | fgrep -q arm64; then
-  echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
+
+if [ "$SWAPGB" -gt 0 ]; then
+  echo 'RESUME="LABEL=RASPISWAP"' >${MNTROOT}/etc/initramfs-tools/conf.d/resume
+else
+  echo 'RESUME="none"' >${MNTROOT}/etc/initramfs-tools/conf.d/resume
 fi
 
 if [ "$MMSUITE" != beowulf ]; then
