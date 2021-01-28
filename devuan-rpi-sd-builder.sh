@@ -256,7 +256,7 @@ echo 'ROOTPART=LABEL=RASPIROOT' >>${MNTROOT}/etc/default/raspi-firmware
 cat >>${MNTROOT}/etc/initramfs-tools/modules <<EOF
 raspberrypi_hwmon
 raspberrypi_cpufreq
-reset-raspberrypi
+reset_raspberrypi
 EOF
 if echo $MMARCH | fgrep -q arm64; then
   echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
