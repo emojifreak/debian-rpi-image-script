@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt-get -q -y install mmdebstrap qemu-user-static binfmt-support fdisk gdisk dosfstools
+apt-get -q -y install mmdebstrap qemu-user-static binfmt-support fdisk gdisk dosfstools systemd-container
 
 MNTROOT=`mktemp -d`
 MNTFIRM=`mktemp -d`
@@ -302,7 +302,7 @@ Name=${NETIF}
 [Network]
 DHCP=yes
 EOF
-    chroot ${MNTROOT} systemctl enable systemd-networkd
+    systemd-nspawn -q -D ${MNTROOT} -a systemctl enable systemd-networkd
     if [ $NETIF = wlan0 ]; then
       NETCONFIG="${NETCONFIG} and /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
       if [ -n "$REGDOM" ]; then
@@ -316,18 +316,18 @@ network={
   psk="${PSK}"
 }
 EOF
-      chroot ${MNTROOT} systemctl enable wpa_supplicant@wlan0
+      systemd-nspawn -q -D ${MNTROOT} -a systemctl enable wpa_supplicant@wlan0
     fi
   fi
 fi
 
 set -x
-#chroot ${MNTROOT} pam-auth-update
-chroot ${MNTROOT} passwd root
-chroot ${MNTROOT} dpkg-reconfigure tzdata
-chroot ${MNTROOT} dpkg-reconfigure locales
-chroot ${MNTROOT} dpkg-reconfigure keyboard-configuration
-chroot ${MNTROOT} fake-hwclock save
+#systemd-nspawn -q -D ${MNTROOT} -a pam-auth-update
+systemd-nspawn -q -D ${MNTROOT} -a passwd root
+systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure tzdata
+systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure locales
+systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure keyboard-configuration
+systemd-nspawn -q -D ${MNTROOT} -a fake-hwclock save
 
 echo "rootfstype=$FSTYPE" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
@@ -342,10 +342,10 @@ if echo $MMARCH | fgrep -q arm64; then
 fi
 
 if [ "$MMSUITE" != buster ]; then
-  chroot ${MNTROOT} apt-get -y --purge --autoremove purge python2.7-minimal
+  systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge python2.7-minimal
 fi
 if [ $NETWORK = network-manager -o $NETWORK = systemd-networkd ]; then
-  chroot ${MNTROOT} apt-get -y --purge --autoremove purge ifupdown
+  systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge ifupdown
   rm -f ${MNTROOT}/etc/network/interfaces
 fi  
 set +x
@@ -364,7 +364,7 @@ cat >>${MNTROOT}/root/.profile <<EOF
 echo "$NETCONFIG"
 EOF
 
-chroot ${MNTROOT} update-initramfs -u -k all
+systemd-nspawn -q -D ${MNTROOT} -a update-initramfs -u -k all
 sed -i "s|${DEVFILE}${PARTCHAR}2|LABEL=RASPIROOT|" ${MNTROOT}/boot/firmware/cmdline.txt
 if echo "$MMARCH" | fgrep -q arm64; then
   sed -i "s|cma=64M||" ${MNTROOT}/boot/firmware/cmdline.txt
