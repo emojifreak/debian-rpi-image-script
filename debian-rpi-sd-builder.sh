@@ -333,9 +333,9 @@ echo "rootfstype=$FSTYPE" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
 echo 'ROOTPART=LABEL=RASPIROOT' >>${MNTROOT}/etc/default/raspi-firmware
 cat >>${MNTROOT}/etc/initramfs-tools/modules <<EOF
-raspberrypi_hwmon
-raspberrypi_cpufreq
 reset_raspberrypi
+raspberrypi_cpufreq
+raspberrypi_hwmon
 EOF
 if echo $MMARCH | fgrep -q arm64; then
   echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
