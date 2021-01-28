@@ -261,11 +261,10 @@ EOF
     NETCONFIG="Network configurations can be changed by nmtui"
     if [ "$NETIF" = wlan0 ]; then
       NETCONFIG="${NETCONFIG} and /etc/default/crda"
-      UUID=`uuidgen`
+      #UUID=`uuidgen`
       cat >>"${MNTROOT}/etc/NetworkManager/system-connections/${SSID}.nmconnection" <<EOF
 [connection]
 id=$SSID
-uuid=${UUID}
 type=wifi
 permissions=
 
