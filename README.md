@@ -1,6 +1,4 @@
-~~Warning: [bug in raspi-firmware](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=975943) makes the built image unbootable with 64-bit kernel, please add arm_64bit=1 to config.txt by hand.~~
-
-Built images are available at https://drive.google.com/drive/folders/1-L5pT4tn7wfxp9urjnIDL2SvAbxO8Vl6?usp=sharing
+Built images are available at https://drive.google.com/drive/folders/1-L5pT4tn7wfxp9urjnIDL2SvAbxO8Vl6?usp=sharing (not supporting USB MSD boot, sorry).
 
 Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will probably fail.
 
@@ -8,6 +6,7 @@ Warning: You need [a recent version of qemu-user-static package](https://package
 Shell script to build Debian SD card image booting the Raspberry Pi series.
 Official Debian SD card images are available at https://raspi.debian.net/ Features provided by this shell script are
 
+* GPT partitioning and boot from USB.
 * Choice of Debian 10 Buster, 11 Bullseye and later.
 * Choice among ifupdown, Network Manager and systemd-networkd for network configuration
 * Choice of package coverage according to the [package priority](https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities)
@@ -17,13 +16,12 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 * Choice of wireless SSID
 * Choice of keyboard layout
 
-An SD card must be set in `/dev/mmcblk0` or change the script. If you find **any trouble**, please report it as **a github issue here**.
+If you find **any trouble**, please report it as **a github issue here**.
 Other build shell scripts are listed below.
 
 # devuan-rpi-image-script
 SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
 , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
-You may have to [install the Devuan keyring](https://www.devuan.org/os/keyring) before running the script.
 **The two shell scripts are similar except packages given as an argument to `mmdebstrap`,**
 namely, `systemd-sysv,udev,debian-archive-keyring` versus `sysvinit-core,eudev,devuan-keyring,sntp`.
 Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
@@ -36,7 +34,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * `drivers/gpu/drm/vc4.ko` enables 4K resolution and DRI/DRM.
 * But [it sometimes garbles display output](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980785). `disable_fw_kms_setup=1` in `config.txt` often supress this symptom. If `disable_fw_kms_setup=1` does not help, patched kernel package is available at http://153.240.174.134:64193/kernel-deb-5.9/
 * [`gdm3` display manager and gnome session fail because of insufficient CMA](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980536). Adding `cma=192M@256M` to `cmdline.txt` fixes this symptom.
-* [Boot from USB is impossible](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977694) unlike Linux 5.9. Kernel package capable of USB boot is available at http://153.240.174.134:64193/kernel-deb-5.9/
+* ~~[Boot from USB is impossible](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977694) unlike Linux 5.9. Kernel package capable of USB boot is available at http://153.240.174.134:64193/kernel-deb-5.9/~~
 * Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.
 * [When kernel is booted from USB, `udisks2` consumes lots of CPU power](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980980). It can be prevented by `systemctl mask udisks2`.
 
@@ -46,6 +44,7 @@ the target architecture in place of `armhf` or `arm64`,
 then an SD card with 32-bit executables and 64-bit kernel will be built. But
 [it does not boot](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=971748). To make it bootable,
 do the following steps as root after running the above script:
+~~It should boot. The following steps have become unnecessary.~~
 
 1. `mount /dev/mmcblk0p2 /mnt`
 2. `mount /dev/mmcblk0p1 /mnt/boot/firmware`
