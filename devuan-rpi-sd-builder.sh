@@ -290,7 +290,12 @@ echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
 echo 'You should set your country to /etc/default/crda.'
 EOF
 
-chroot ${MNTROOT} update-initramfs -u -k all
+if which systemd-nspawn | fgrep -q systemd-nspawn; then
+  systemd-nspawn -q -D ${MNTROOT} -a update-initramfs -u -k all
+else
+  chroot ${MNTROOT} update-initramfs -u -k all
+fi
+
 sed -i "s|${DEVFILE}${PARTCHAR}2|LABEL=RASPIROOT|" ${MNTROOT}/boot/firmware/cmdline.txt
 if echo "$MMARCH" | fgrep -q arm64; then
   sed -i "s|cma=64M||" ${MNTROOT}/boot/firmware/cmdline.txt
