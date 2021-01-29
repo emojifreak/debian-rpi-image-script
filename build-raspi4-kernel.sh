@@ -77,10 +77,10 @@ EOF
 
 xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
 cat >>.config <<'EOF'
-CONFIG_LOCALVERSION="-raspi4"
-CONFIG_RESET_RASPBERRYPI=y
-CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
-CONFIG_SENSORS_RASPBERRYPI_HWMON=y
+CONFIG_LOCALVERSION="-vc4patched"
+CONFIG_RESET_RASPBERRYPI=m
+CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
+CONFIG_SENSORS_RASPBERRYPI_HWMON=m
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 CONFIG_MQ_IOSCHED_KYBER=y
 CONFIG_IOSCHED_BFQ=y
@@ -94,6 +94,12 @@ CONFIG_DEBUG_INFO=n
 EOF
 make oldconfig
 nice -19 make -j 12 bindeb-pkg
+
+if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
+  echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
+  echo 'reset_raspberrypi is added to /etc/initramfs-tools/modules.'
+fi
+
 #CONFIG_ARCH_BCM_IPROC=y
 #CONFIG_ARCH_BRCMSTB=y
 #CONFIG_ARCH_BCM4908=y
