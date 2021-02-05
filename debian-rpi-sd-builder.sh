@@ -365,10 +365,6 @@ fi
 if [ "$MMSUITE" != buster ]; then
   systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge python2.7-minimal
 fi
-if [ $NETWORK = network-manager -o $NETWORK = systemd-networkd ]; then
-  systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge ifupdown
-  rm -f ${MNTROOT}/etc/network/interfaces
-fi  
 set +x
 
 if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
@@ -379,7 +375,13 @@ deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
 deb http://deb.debian.org/debian/ buster-updates main contrib non-free
 deb http://deb.debian.org/debian/ buster-backports main contrib non-free
 EOF
+  systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
 fi
+
+if [ $NETWORK = network-manager -o $NETWORK = systemd-networkd ]; then
+  systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge ifupdown
+  rm -f ${MNTROOT}/etc/network/interfaces
+fi  
 
 cat >>${MNTROOT}/root/.profile <<EOF
 echo "$NETCONFIG"
