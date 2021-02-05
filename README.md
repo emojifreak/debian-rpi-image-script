@@ -1,7 +1,7 @@
 Built images are available at https://drive.google.com/drive/folders/1-L5pT4tn7wfxp9urjnIDL2SvAbxO8Vl6?usp=sharing ~~(not supporting USB MSD boot, sorry)~~.
 **Now these images support USB booting if you have updated the RPi firmware** as https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/msd.md .
 
-Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/bullseye/qemu-user-static). Otherwise the scripts here will probably fail.
+Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/sid/qemu-user-static). Otherwise the scripts here will probably fail.
 
 # debian-rpi-image-script
 Shell script to build Debian SD card image booting the Raspberry Pi series.
