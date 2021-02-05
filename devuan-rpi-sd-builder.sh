@@ -267,7 +267,7 @@ raspberrypi_hwmon
 EOF
 
 if [ "$SWAPGB" -gt 0 ]; then
-  echo 'RESUME="LABEL=RASPISWAP"' >${MNTROOT}/etc/initramfs-tools/conf.d/resume
+  echo 'RESUME="none"' >${MNTROOT}/etc/initramfs-tools/conf.d/resume
 else
   echo 'RESUME="none"' >${MNTROOT}/etc/initramfs-tools/conf.d/resume
 fi
