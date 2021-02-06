@@ -9,7 +9,7 @@ http_proxy=http://192.168.1.2:3128/
 https_proxy=http://192.168.1.2:3128/
 EOF
 cat >/etc/apt/apt.conf.d/00myconf <<EOF
-APT::Default-Release "sid";
+APT::Default-Release "bullseye";
 APT::Install-Recommends 0;
 APT::Get::Purge 1;
 APT::Get::Upgrade-Allow-New 1;
