@@ -110,7 +110,6 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 #apt-get -y --purge --autoremove --install-recommends install tigervnc-standalone-server
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-core xserver-xorg-video-fbdev xserver-xorg-input-all pulseaudio udisks2
-systemctl mask udisks2
 #ln -s /dev/null /etc/systemd/user/pulseaudio.service
 
 
