@@ -341,7 +341,7 @@ fi
 
 ln -s /dev/null ${MNTROOT}/etc/systemd/system/udisks2.service
 mkdir -p ${MNTROOT}/etc/systemd/sleep.conf.d
-cat >/etc/systemd/sleep.conf.d/nosleep.conf <<'EOF'
+cat >${MNTROOT}/etc/systemd/sleep.conf.d/nosleep.conf <<'EOF'
 [Sleep]
 AllowSuspend=no
 AllowHibernation=no
