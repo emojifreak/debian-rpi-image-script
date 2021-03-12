@@ -20,6 +20,10 @@ Official Debian SD card images are available at https://raspi.debian.net/ Featur
 If you find **any trouble**, please report it as **a github issue here**.
 Other build shell scripts are listed below.
 
+# raspberripyOS-rpi-sd-builder
+
+Use the kernel from Raspberry Pi OS. Except that, it is the same as above. Use of wayland requires [module_blacklist=v3d](https://github.com/raspberrypi/linux/issues/4202).
+
 # devuan-rpi-image-script
 SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
 , which does not have an image for RPi4, but the above script can produce an image booting RPi4 (incl. 8GB model).
