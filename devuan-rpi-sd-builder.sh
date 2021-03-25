@@ -160,12 +160,12 @@ fi
 if [ "$MMARCH" = armel ]; then
   KERNELPKG=linux-image-rpi
 elif [ "$MMARCH" = armhf ]; then
-  KERNELPKG=linux-image-armmp-lpae
+  KERNELPKG=linux-image-rt-armmp-lpae
 else
   if [ "$MMSUITE" = beowulf ]; then
-    KERNELPKG=linux-image-arm64/beowulf-backports
+    KERNELPKG=linux-image-rt-arm64/beowulf-backports
   else
-    KERNELPKG=linux-image-arm64
+    KERNELPKG=linux-image-rt-arm64
   fi
 fi
 echo "Selected kernel package is $KERNELPKG."
