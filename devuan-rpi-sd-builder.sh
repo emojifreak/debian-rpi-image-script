@@ -252,12 +252,12 @@ chroot ${MNTROOT} fake-hwclock save
 
 echo "rootfstype=$FSTYPE" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
-echo '#disable_overscan=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
+echo 'disable_overscan=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
 echo 'ROOTPART="LABEL=RASPIROOT"' >>${MNTROOT}/etc/default/raspi-firmware
 if echo $MMARCH | fgrep -q arm64; then
   echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
   echo 'hdmi_enable_4kp60=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
-  echo "rootfstype=$FSTYPE module_blacklist=vc4" >${MNTROOT}/etc/default/raspi-extra-cmdline
+  #echo "rootfstype=$FSTYPE module_blacklist=vc4" >${MNTROOT}/etc/default/raspi-extra-cmdline
 fi
 
 cat >>${MNTROOT}/etc/initramfs-tools/modules <<EOF
