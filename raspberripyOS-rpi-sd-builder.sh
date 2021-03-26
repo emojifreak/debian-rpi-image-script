@@ -179,6 +179,7 @@ mount -o async,discard,lazytime,noatime ${DEVFILE}${PARTCHAR}1 ${MNTROOT}/boot
 echo -n "Choose hostname: "
 read YOURHOSTNAME
 echo "$YOURHOSTNAME" >${MNTROOT}/etc/hostname
+echo "127.0.1.1\t${YOURHOSTNAME}" >> ${MNTROOT}/etc/hosts
 if [ ${FSTYPE} = btrfs ]; then
   cat >${MNTROOT}/etc/fstab <<EOF
 LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,discard,compress-force=lzo 0 1
