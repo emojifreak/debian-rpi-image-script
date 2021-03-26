@@ -36,7 +36,7 @@ export LANG=C.UTF-8
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/games
 EOF
 
-for d in journald logind networkd user system sleep; do
+for d in journald logind networkd user system; do
  mkdir /etc/systemd/${d}.conf.d
 done
 cat >/etc/systemd/journald.conf.d/storage.conf <<EOF
