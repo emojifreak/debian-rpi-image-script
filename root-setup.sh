@@ -165,7 +165,7 @@ for g in cdrom floppy audio video plugdev kvm netdev scanner debci libvirt lp ad
   fi
 done
 mkdir -p /home/$NONROOTUSER/.config
-cat >/home/$NONROOTUSER/.config <<EOF
+cat >/home/$NONROOTUSER/.config/weston.ini <<EOF
 [core]
 use-pixman=true
 [keyboard]
