@@ -123,6 +123,7 @@ apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-cor
 apt-get -y --purge --autoremove --install-recommends install weston firefox-esr-l10n-ja mrboom va-driver-all vdpau-driver-all fonts-noto-color-emoji
 apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager network-manager-config-connectivity-debian
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
+apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
 
 #ln -s /dev/null /etc/systemd/user/pulseaudio.service
 
