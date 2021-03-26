@@ -99,7 +99,7 @@ ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[a-z]", ATTR{queue/schedule
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]", ATTR{queue/scheduler}="bfq"
 EOF
 
-#echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware 
+echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware 
 apt-get update
 apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
 apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbus-user-session libnss-systemd libpam-systemd
