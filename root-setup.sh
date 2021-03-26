@@ -174,5 +174,7 @@ keymap_layout=jp
 [terminal]
 font=Noto Sans Mono CJK JP
 font-size=16
+[shell]
+locking=false
 EOF
 chown -R ${NONROOTUSER}.${NONROOTUSER} /home/$NONROOTUSER/.config
