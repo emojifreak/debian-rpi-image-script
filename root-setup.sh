@@ -101,7 +101,7 @@ EOF
 
 echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware 
 apt-get update
-#apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
+apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
 apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbus-user-session libnss-systemd libpam-systemd
 apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciutils usbutils bluetooth  bluez bluez-firmware
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
