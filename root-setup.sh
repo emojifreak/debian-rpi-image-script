@@ -106,7 +106,7 @@ apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbu
 apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciutils usbutils bluetooth  bluez bluez-firmware
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install postfix mailutils
-apt-get -y --purge --autoremove --install-recommends install task-japanese fonts-noto-cjk-extra 
+apt-get -y --purge --autoremove --install-recommends install task-japanese/sid fonts-noto-cjk-extra 
 apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth
 
 echo "PermitRootLogin yes" >>/etc/ssh/sshd_config
@@ -120,8 +120,8 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-core xserver-xorg-input-all pulseaudio udisks2
 apt-get -y --purge --autoremove --install-recommends install weston firefox-esr-l10n-ja mrboom va-driver-all vdpau-driver-all fonts-noto-color-emoji
-apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager network-manager-config-connectivity-debian
-apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop
+apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager network-manager-config-connectivity-debian
+apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 
 #ln -s /dev/null /etc/systemd/user/pulseaudio.service
 
