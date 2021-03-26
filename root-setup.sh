@@ -101,7 +101,7 @@ EOF
 
 #echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware 
 apt-get update
-apt-get -y --purge --autoremove --install-recommends install  tasksel/sid
+apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
 apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbus-user-session libnss-systemd libpam-systemd
 apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciutils usbutils bluetooth  bluez bluez-firmware
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
@@ -120,7 +120,7 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-core xserver-xorg-input-all pulseaudio udisks2
 apt-get -y --purge --autoremove --install-recommends install weston firefox-esr-l10n-ja mrboom
-apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop gdm3
+apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager 
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop
 
 #ln -s /dev/null /etc/systemd/user/pulseaudio.service
@@ -173,3 +173,5 @@ keymap_layout=jp
 [terminal]
 font=Noto Sans Mono CJK JP
 font-size=16
+EOF
+chown -R ${NONROOTUSER}.${NONROOTUSER} /home/$NONROOTUSER/.config
