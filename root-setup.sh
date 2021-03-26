@@ -85,6 +85,7 @@ vhost_iotlb
 reset_raspberrypi
 raspberrypi_cpufreq
 raspberrypi_hwmon
+snd_bcm2835 enable_hdmi=1 enable_headphones=0 enable_compat_alsa=1
 EOF
 
 cat >>/etc/initramfs-tools/modules <<EOF
