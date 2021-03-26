@@ -120,7 +120,7 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-core xserver-xorg-input-all pulseaudio udisks2
 apt-get -y --purge --autoremove --install-recommends install weston firefox-esr-l10n-ja mrboom
-apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager 
+apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop gdm3 network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend gnome-keyring xdg-user-dirs-gtk  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager network-manager-config-connectivity-debian
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop
 
 #ln -s /dev/null /etc/systemd/user/pulseaudio.service
