@@ -169,6 +169,7 @@ done
 mkdir -p /home/$NONROOTUSER/.config
 cat >/home/$NONROOTUSER/.config/weston.ini <<EOF
 [core]
+modules=systemd-notify.so
 use-pixman=true
 [keyboard]
 keymap_layout=jp
