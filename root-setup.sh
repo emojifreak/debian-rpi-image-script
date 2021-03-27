@@ -115,17 +115,16 @@ echo "PermitRootLogin yes" >>/etc/ssh/sshd_config
 apt-get -y --purge --autoremove --no-install-recommends install unzip fontconfig
 
 apt-get -y --purge --autoremove --no-install-recommends install emacs-nox emacs-el emacs-common-non-dfsg
-apt-get -y --purge --autoremove --no-install-recommends install  libavcodec-extra libavfilter-extra
+apt-get -y --purge --autoremove --no-install-recommends install  libavcodec-extra libavfilter-extra va-driver-all vdpau-driver-all mesa-vulkan-drivers
 apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-module libcanberra-gtk3-module
 #apt-get -y --purge --autoremove --install-recommends install tigervnc-standalone-server
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
-apt-get -y --purge --autoremove --no-install-recommends install xserver-xorg-core xserver-xorg-input-all pulseaudio alsa-ucm-conf network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend xdg-user-dirs-gtk xdg-user-dirs xdg-utils
-apt-get -y --purge --autoremove --install-recommends install weston firefox-esr-l10n-ja mrboom va-driver-all vdpau-driver-all fonts-noto-color-emoji
+apt-get -y --purge --autoremove --no-install-recommends install weston xserver-xorg-core xserver-xorg-input-all pulseaudio alsa-ucm-conf network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend xdg-user-dirs-gtk xdg-user-dirs xdg-utils
+apt-get -y --purge --autoremove --install-recommends install firefox-esr-l10n-ja mrboom fonts-noto-color-emoji
 #apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid udisks2 gdm3  gnome-keyring  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager network-manager-config-connectivity-debian
 #apt-get -y --purge --autoremove --no-install-recommends install t xfce4 xfce4-goodies xfce4-notifyd xfce4-power-manager pavucontrol xiccd xfce4-power-manager-plugins
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 #apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
-#ln -s /dev/null /etc/systemd/user/pulseaudio.service
 
 
 
