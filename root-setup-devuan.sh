@@ -15,10 +15,10 @@ APT::Get::Purge 1;
 APT::Get::Upgrade-Allow-New 1;
 EOF
 cat >/etc/apt/sources.list <<EOF
-deb http://deb.devuan.org/devuan chimaera main contrib non-free
-deb-src http://deb.devuan.org/devuan chimaera main contrib non-free
-deb http://deb.devuan.org/devuan ceres main contrib non-free
-deb-src http://deb.devuan.org/devuan ceres main contrib non-free
+deb http://deb.devuan.org/merged chimaera main contrib non-free
+deb-src http://deb.devuan.org/merged chimaera main contrib non-free
+deb http://deb.devuan.org/merged ceres main contrib non-free
+deb-src http://deb.devuan.org/merged ceres main contrib non-free
 EOF
 
 cat >>/root/.bashrc <<EOF
@@ -59,7 +59,7 @@ echo -n "Ordinary login user: "
 read NONROOTUSER
 adduser $NONROOTUSER
 # See https://wiki.debian.org/SystemGroups
-for g in cdrom floppy audio video plugdev kvm netdev scanner debci libvirt lp adm systemd-journal fax tty bluetooth pulse-access; do
+for g in cdrom floppy audio video plugdev kvm netdev scanner debci libvirt lp adm fax tty bluetooth pulse-access; do
   if fgrep -q $g /etc/group; then
      adduser $NONROOTUSER $g
   fi
