@@ -170,8 +170,9 @@ done
 mkdir -p /home/$NONROOTUSER/.config
 cat >/home/$NONROOTUSER/.config/weston.ini <<EOF
 [core]
+idle-time=0
 modules=systemd-notify.so
-use-pixman=true
+#use-pixman=true
 [keyboard]
 keymap_layout=jp
 [terminal]
