@@ -125,7 +125,7 @@ apt-get -y --purge --autoremove --install-recommends install firefox-esr-l10n-ja
 #apt-get -y --purge --autoremove --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
 #apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid gdm3  gnome-keyring  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager
 #apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd xfce4-power-manager pavucontrol xiccd xfce4-power-manager-plugins
-#apt-get -y --purge --autoremove --no-install-recommends install task-kde-desktop/sid task-desktop/sid plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
+#apt-get -y --purge --autoremove --no-install-recommends install kde-full qml-module-qtwayland-compositor qml-module-qtwayland-client-texturesharing task-kde-desktop/sid task-desktop/sid plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 #apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
 
