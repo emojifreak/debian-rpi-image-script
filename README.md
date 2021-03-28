@@ -43,6 +43,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * WiFi at 5GHz is sometimes blocked by the vc4.ko and high resolution display. `module_blacklist=vc4` in `cmdline.txt` and `hdmi_enable_4kp60=1` could enable both 5GHz WiFi and high resulution simultaneously.
 * Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.
 * ~~[When kernel is booted from USB, `udisks2` consumes lots of CPU power](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980980). It can be prevented by `systemctl mask udisks2`.~~
+* Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted.
 
 # 32-bit executables on 64-bit linux-image-arm64 kernel
 `linux-image-arm64` 64-bit kernel can run `armhf` 32-bit executables. If `armhf,arm64` is given to the above scripts as
