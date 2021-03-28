@@ -337,7 +337,7 @@ echo 'ROOTPART="LABEL=RASPIROOT"' >>${MNTROOT}/etc/default/raspi-firmware
 if echo $MMARCH | fgrep -q arm64; then
   echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
   echo 'hdmi_enable_4kp60=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
-  #echo "rootfstype=$FSTYPE module_blacklist=vc4" >${MNTROOT}/etc/default/raspi-extra-cmdline
+  echo "rootfstype=$FSTYPE module_blacklist=snd_bcm2835" >${MNTROOT}/etc/default/raspi-extra-cmdline
 fi
 
 ln -s /dev/null ${MNTROOT}/etc/systemd/system/udisks2.service
