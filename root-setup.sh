@@ -9,6 +9,7 @@ cat >/etc/environment <<EOF
 #https_proxy=http://192.168.1.2:3128/
 MOZ_ENABLE_WAYLAND=1
 QT_QPA_PLATFORM=wayland
+GDK_BACKEND=wayland
 #XDG_SESSION_TYPE=wayland
 CLUTTER_BACKEND=wayland
 SDL_VIDEODRIVER=wayland
