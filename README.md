@@ -32,8 +32,8 @@ namely, `systemd-sysv,udev,debian-archive-keyring` versus `sysvinit-core,eudev,d
 Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 
 # Additional packages
+* Graphical User Interface can be installed by `tasksel` or `apt-get install task-xfce-desktop`.
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
-* Graphical User Interface can be installed by `tasksel`.
 
 # Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
 * Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted. Otherwise, pulaseaudio does not work well.
