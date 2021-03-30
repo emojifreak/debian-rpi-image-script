@@ -7,12 +7,12 @@ read tmpvar
 cat >/etc/environment <<EOF
 #http_proxy=http://192.168.1.2:3128/
 #https_proxy=http://192.168.1.2:3128/
-MOZ_ENABLE_WAYLAND=1
-QT_QPA_PLATFORM=wayland
-GDK_BACKEND=wayland
+#MOZ_ENABLE_WAYLAND=1
+#QT_QPA_PLATFORM=wayland
+#GDK_BACKEND=wayland
 #XDG_SESSION_TYPE=wayland
-CLUTTER_BACKEND=wayland
-SDL_VIDEODRIVER=wayland
+#CLUTTER_BACKEND=wayland
+#SDL_VIDEODRIVER=wayland
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/games
 SDL_RENDER_DRIVER=opengles2
 SDL_VIDEO_GLES2=1
