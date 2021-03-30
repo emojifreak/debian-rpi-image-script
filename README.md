@@ -35,15 +35,17 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
 * Graphical User Interface can be installed by `tasksel`.
 
-# Comments on Linux 5.10 and Rapsberry Pi 4 (as of January 2021)
+# Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
+* Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted. Otherwise, pulaseaudio does not work well.
 * `drivers/gpu/drm/vc4.ko` enables 4K resolution and DRI/DRM. 4K resolution can be enabled without `vc4.ko` on RPi4 if `hdmi_enable_4kp60=1` is included in `config.txt`.
 * But [vc4.ko sometimes garbles display output](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980785). `disable_fw_kms_setup=1` in `config.txt` often supress this symptom. If `disable_fw_kms_setup=1` does not help, patched kernel package is available at http://153.240.174.134:64193/kernel-deb-5.9/ **The patch was included at Linux 5.10.13**.
 * [`gdm3` display manager and gnome session fail with vc4.ko because of insufficient CMA](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980536). Adding `cma=192M@256M` to `cmdline.txt` fixes this symptom.
 * ~~[Boot from USB is impossible](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977694) unlike Linux 5.9. Kernel package capable of USB boot is available at http://153.240.174.134:64193/kernel-deb-5.9/~~
 * WiFi at 5GHz is sometimes blocked by the vc4.ko and high resolution display. `module_blacklist=vc4` in `cmdline.txt` and `hdmi_enable_4kp60=1` could enable both 5GHz WiFi and high resulution simultaneously.
-* Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.
+* The above problem is caused by the wrong firmware `/lib/firmware/brcm/brcmfmac43455-sdio.bin` and `/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob`. To fix this, replace those files by https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm
+* [5GHz WiFi on RPi4 becomes unusable with firmware-brcm80211 versions newer than 20210201](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=985632). Replacing the above files also fixes this problem.
+* ~~Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.~~
 * ~~[When kernel is booted from USB, `udisks2` consumes lots of CPU power](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980980). It can be prevented by `systemctl mask udisks2`.~~
-* Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted.
 
 # 32-bit executables on 64-bit linux-image-arm64 kernel
 `linux-image-arm64` 64-bit kernel can run `armhf` 32-bit executables. If `armhf,arm64` is given to the above scripts as
