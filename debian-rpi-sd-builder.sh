@@ -152,7 +152,7 @@ fi
 if [ "$MMARCH" = armel ]; then
   KERNELPKG=linux-image-rpi
 elif [ "$MMARCH" = armhf ]; then
-  KERNELPKG=linux-image-rt-armmp-lpae
+  KERNELPKG=linux-image-rt-armmp
 else
   if [ "$MMSUITE" = buster ]; then
     KERNELPKG=linux-image-rt-arm64/buster-backports
