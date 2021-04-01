@@ -377,6 +377,14 @@ deb http://deb.debian.org/debian/ buster-updates main contrib non-free
 deb http://deb.debian.org/debian/ buster-backports main contrib non-free
 EOF
   systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
+elif [ "$MMSUITE" = buster ] then
+  cat > ${MNTROOT}/etc/apt/sources.list <<EOF
+deb http://deb.debian.org/debian bullseye main contrib non-free
+deb http://security.debian.org/ bullseye-security main contrib non-free
+deb http://deb.debian.org/debian bullseye-updates main contrib non-free
+deb http://deb.debian.org/debian bullseye-backports main contrib non-free
+EOF
+  systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
 fi
 
 if [ $NETWORK = network-manager -o $NETWORK = systemd-networkd ]; then
