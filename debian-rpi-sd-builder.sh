@@ -386,6 +386,9 @@ fi
 
 cat >>${MNTROOT}/root/.profile <<EOF
 echo "$NETCONFIG"
+echo "If you have problems with WiFi, replace files in"
+echo "/lib/firmware/brcm by those in"
+echo "https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm"
 EOF
 
 systemd-nspawn -q -D ${MNTROOT} -a update-initramfs -u -k all
