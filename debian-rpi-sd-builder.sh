@@ -377,7 +377,7 @@ deb http://deb.debian.org/debian/ buster-updates main contrib non-free
 deb http://deb.debian.org/debian/ buster-backports main contrib non-free
 EOF
   systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
-elif [ "$MMSUITE" = buster ] then
+elif [ "$MMSUITE" = bullseye ]; then
   cat > ${MNTROOT}/etc/apt/sources.list <<EOF
 deb http://deb.debian.org/debian bullseye main contrib non-free
 deb http://security.debian.org/ bullseye-security main contrib non-free
