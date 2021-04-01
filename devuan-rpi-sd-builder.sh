@@ -292,6 +292,9 @@ fi
 cat >>${MNTROOT}/root/.profile <<'EOF'
 echo 'Run "sntp -S pool.ntp.org" for correcting the clock of your Raspberry Pi.'
 echo 'You should set your country to /etc/default/crda.'
+echo "If you have problems with WiFi, replace files in"
+echo "/lib/firmware/brcm by those in"
+echo "https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm"
 EOF
 
 if which systemd-nspawn | fgrep -q systemd-nspawn; then
