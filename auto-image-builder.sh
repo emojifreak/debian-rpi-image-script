@@ -70,5 +70,5 @@ EOF
     done
   done
 done
+echo "Waiting xz compression to finish..."
 wait
-
