@@ -36,6 +36,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
 
 # Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
+* `task-xfce-desktop`, `task-gnome-desktop` and `weston` can be used *with no problem* (incl. YouTube on Firefox) on RPi4 Bullseye with the below workarounds.
 * Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted. Otherwise, pulseaudio does not work well.
 * `drivers/gpu/drm/vc4.ko` enables 4K resolution and DRI/DRM. 4K resolution can be enabled without `vc4.ko` on RPi4 if `hdmi_enable_4kp60=1` is included in `config.txt`.
 * But [vc4.ko sometimes garbles display output](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980785). `disable_fw_kms_setup=1` in `config.txt` often supress this symptom. If `disable_fw_kms_setup=1` does not help, patched kernel package is available at http://153.240.174.134:64193/kernel-deb-5.9/ **The patch was included at Linux 5.10.13**.
