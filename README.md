@@ -69,3 +69,6 @@ and the following steps are necessary. The difference comes from `systemd-nspawn
 * https://github.com/debian-pi/raspbian-ua-netinst
 
 If you find another builder not listed above, please open a github issue. Where is the Ubuntu official builder?
+
+# Debian ARM mailing list
+https://lists.debian.org/debian-arm/ is a mailing list for talking Debian ARM related topics, including Raspberry Pi.
