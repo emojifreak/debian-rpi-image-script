@@ -16,68 +16,26 @@ apt-get -q -y build-dep linux/sid
 wait $pid
 cd linux-${KVAR}
 
-# The following patch is from
-# https://lists.freedesktop.org/archives/dri-devel/2021-January/295094.html
-# https://lists.freedesktop.org/archives/dri-devel/2021-January/295093.html
-patch -p0 <<'EOF'
---- drivers/gpu/drm/vc4/vc4_hvs.c.~1~	2021-01-20 02:27:34.000000000 +0900
-+++ drivers/gpu/drm/vc4/vc4_hvs.c	2021-01-22 09:44:19.046947797 +0900
-@@ -618,11 +618,11 @@
- 	 * for now we just allocate globally.
- 	 */
- 	if (!hvs->hvs5)
--		/* 96kB */
--		drm_mm_init(&hvs->lbm_mm, 0, 96 * 1024);
-+		/* 48k words of 2x12-bit pixels */
-+		drm_mm_init(&hvs->lbm_mm, 0, 48 * 1024);
- 	else
--		/* 70k words */
--		drm_mm_init(&hvs->lbm_mm, 0, 70 * 2 * 1024);
-+		/* 60k words of 4x12-bit pixels */
-+		drm_mm_init(&hvs->lbm_mm, 0, 60 * 1024);
- 
- 	/* Upload filter kernels.  We only have the one for now, so we
- 	 * keep it around for the lifetime of the driver.
---- drivers/gpu/drm/vc4/vc4_plane.c.~1~	2021-01-20 02:27:34.000000000 +0900
-+++ drivers/gpu/drm/vc4/vc4_plane.c	2021-01-22 09:44:48.527952460 +0900
-@@ -437,6 +437,7 @@
- static u32 vc4_lbm_size(struct drm_plane_state *state)
- {
- 	struct vc4_plane_state *vc4_state = to_vc4_plane_state(state);
-+	struct vc4_dev *vc4 = to_vc4_dev(state->plane->dev);
- 	u32 pix_per_line;
- 	u32 lbm;
- 
-@@ -472,7 +473,11 @@
- 		lbm = pix_per_line * 16;
- 	}
- 
--	lbm = roundup(lbm, 32);
-+	/* Align it to 64 or 128 (hvs5) bytes */
-+	lbm = roundup(lbm, vc4->hvs->hvs5 ? 128 : 64);
-+
-+	/* Each "word" of the LBM memory contains 2 or 4 (hvs5) pixels */
-+	lbm /= vc4->hvs->hvs5 ? 4 : 2;
- 
- 	return lbm;
- }
-@@ -912,9 +917,9 @@
- 		if (!vc4_state->is_unity) {
- 			vc4_dlist_write(vc4_state,
- 					VC4_SET_FIELD(vc4_state->crtc_w,
--						      SCALER_POS1_SCL_WIDTH) |
-+						      SCALER5_POS1_SCL_WIDTH) |
- 					VC4_SET_FIELD(vc4_state->crtc_h,
--						      SCALER_POS1_SCL_HEIGHT));
-+						      SCALER5_POS1_SCL_HEIGHT));
- 		}
- 
- 		/* Position Word 2: Source Image Size */
-EOF
 
 xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
+cp .config .config-orig
 cat >>.config <<'EOF'
-CONFIG_LOCALVERSION="-vc4patched"
+CONFIG_LOCALVERSION="-configpreempt"
+CONFIG_PREEMPT=y
+CONFIG_VIRT_CPU_ACCOUNTING_NATIVE=y
+CONFIG_IRQ_TIME_ACCOUNTING=y
+CONFIG_SCHED_THERMAL_PRESSURE=y
+CONFIG_UCLAMP_TASK=y
+CONFIG_UCLAMP_TASK_GROUP=y
+CONFIG_TASKSTATS=y
+CONFIG_TASK_DELAY_ACCT=y
+CONFIG_TASK_XACCT=y
+CONFIG_TASK_IO_ACCOUNTING=y
+CONFIG_IKCONFIG=m
+CONFIG_IKCONFIG_PROC=y
+CONFIG_BLK_CGROUP=y
+CONFIG_BFQ_GROUP_IOSCHED=y
+CONFIG_BLK_DEV_THROTTLING=y
 CONFIG_RESET_RASPBERRYPI=m
 CONFIG_ARM_RASPBERRYPI_CPUFREQ=m
 CONFIG_SENSORS_RASPBERRYPI_HWMON=m
@@ -88,13 +46,22 @@ CONFIG_DRM_VC4=m
 CONFIG_DRM_VC4_HDMI_CEC=y
 #CONFIG_VDPA=m
 CONFIG_NTFS_FS=m
-CONFIG_IKCONFIG=m
-CONFIG_IKCONFIG_PROC=y
 CONFIG_DEBUG_INFO=n
+CONFIG_PM=n
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
+# Triggers enablement via hibernate callbacks
+CONFIG_XEN=n
+# ARM/ARM64 architectures that select PM unconditionally
+CONFIG_ARCH_OMAP2PLUS_TYPICAL=n
+CONFIG_ARCH_RENESAS=n
+CONFIG_ARCH_TEGRA=n
+CONFIG_ARCH_VEXPRESS=n
 EOF
 make oldconfig
+diff -u .config-orig .config | less
+echo "Hit Enter to proceed."
+read tmp
 nice -19 make -j 12 bindeb-pkg
 
 if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
