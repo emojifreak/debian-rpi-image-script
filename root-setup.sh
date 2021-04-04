@@ -83,13 +83,11 @@ bfq
 kyber
 vhost_net
 vhost_iotlb
-reset_raspberrypi
-raspberrypi_cpufreq
-raspberrypi_hwmon
-snd_bcm2835 enable_hdmi=1 enable_headphones=0 enable_compat_alsa=1
+snd_bcm2835 enable_hdmi=0 enable_headphones=1 enable_compat_alsa=1
 EOF
 
 cat >>/etc/initramfs-tools/modules <<EOF
+vc4
 bfq
 kyber
 vhost_net
@@ -122,10 +120,10 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install weston xserver-xorg-core xserver-xorg-input-all pulseaudio pulseaudio-utils pulseaudio-module-bluetooth alsa-ucm-conf xdg-user-dirs-gtk xdg-user-dirs xdg-utils
 apt-get -y --purge --autoremove --install-recommends install firefox-esr-l10n-ja mrboom fonts-noto-color-emoji
-#apt-get -y --purge --autoremove --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
+apt-get -y --purge --autoremove --no-install-recommends install accountsservice
+apt-get -y --purge --autoremove --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
 #apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid gdm3  gnome-keyring  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager
-#apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd xfce4-power-manager pavucontrol xiccd xfce4-power-manager-plugins
-#apt-get -y --purge --autoremove --no-install-recommends install accountsservice
+apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd pavucontrol xiccd task-desktop/sid task-xfce-desktop/sid
 #apt-get -y --purge --autoremove --no-install-recommends install kde-full qml-module-qtwayland-compositor qml-module-qtwayland-client-texturesharing task-kde-desktop/sid task-desktop/sid plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 #apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
