@@ -21,6 +21,9 @@ xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
 cp .config .config-orig
 cat >>.config <<'EOF'
 CONFIG_LOCALVERSION="-preempt"
+CONFIG_BPF_JIT_ALWAYS_ON=y
+CONFIG_USERFAULTFD=y
+CONFIG_RSEQ=y
 CONFIG_PREEMPT=y
 CONFIG_VIRT_CPU_ACCOUNTING_NATIVE=y
 CONFIG_IRQ_TIME_ACCOUNTING=y
