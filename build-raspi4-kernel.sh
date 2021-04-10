@@ -71,8 +71,8 @@ CONFIG_XEN=n
 # ARM/ARM64 architectures that select PM unconditionally
 CONFIG_ARCH_OMAP2PLUS_TYPICAL=n
 CONFIG_ARCH_RENESAS=n
+CONFIG_ARCH_ROCKCHIP=n
 CONFIG_ARCH_TEGRA=n
-CONFIG_ARCH_VEXPRESS=n
 EOF
 make oldconfig
 diff -u .config-orig .config | less
