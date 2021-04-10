@@ -20,6 +20,8 @@ cd linux-${KVAR}
 xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_NFT_REJECT_NETDEV=m
+CONFIG_POWER_RESET_REGULATOR=y
 # ARM/ARM64 architectures other than RPi
 CONFIG_ARCH_ACTIONS=n
 CONFIG_ARCH_AGILEX=n
