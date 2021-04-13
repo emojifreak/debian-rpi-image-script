@@ -16,8 +16,14 @@ apt-get -q -y build-dep linux/sid
 wait $pid
 cd linux-${KVAR}
 
-
-xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
+if [ `dpkg --print-architecture` = arm64 ]; then
+  xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
+elif [ `dpkg --print-architecture` = armhf ]; then
+  xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
+else
+  echo "Unknown architecture"
+  exit 1
+fi
 cp .config .config-orig
 cat >>.config <<'EOF'
 CONFIG_NFT_REJECT_NETDEV=m
@@ -101,7 +107,7 @@ CONFIG_TOUCHSCREEN_RASPBERRYPI_FW=m
 CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY=m
 CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN=m
 CONFIG_PI433=m
-#CONFIG_PCIE_BRCMSTB=m
+CONFIG_PCIE_BRCMSTB=m
 #CONFIG_RESET_BRCMSTB_RESCAL=y
 CONFIG_CC_OPTIMIZE_FOR_SIZE=y
 CONFIG_MQ_IOSCHED_KYBER=y
