@@ -20,6 +20,8 @@ if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
+  ARCH=arm
+  export ARCH
 else
   echo "Unknown architecture"
   exit 1
