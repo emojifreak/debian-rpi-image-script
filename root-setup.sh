@@ -23,9 +23,7 @@ APT::Install-Recommends 0;
 APT::Get::Purge 1;
 APT::Get::Upgrade-Allow-New 1;
 EOF
-cat >/etc/apt/sources.list <<EOF
-deb http://deb.debian.org/debian bullseye main contrib non-free
-deb-src http://deb.debian.org/debian bullseye main contrib non-free
+cat >>/etc/apt/sources.list <<EOF
 deb http://deb.debian.org/debian sid main contrib non-free
 deb-src http://deb.debian.org/debian sid main contrib non-free
 deb http://deb.debian.org/debian experimental main contrib non-free
@@ -97,9 +95,11 @@ EOF
 cat >/etc/udev/rules.d/60-block-scheduler.rules <<'EOF'
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[a-z]", ATTR{queue/scheduler}="bfq"
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]", ATTR{queue/scheduler}="bfq"
+ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="vd[a-z]", ATTR{queue/scheduler}="bfq"
 EOF
 
-echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware 
+echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware
+set -e
 apt-get update
 apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
 apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbus-user-session libnss-systemd libpam-systemd
@@ -127,7 +127,7 @@ apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-good
 #apt-get -y --purge --autoremove --no-install-recommends install kde-full qml-module-qtwayland-compositor qml-module-qtwayland-client-texturesharing task-kde-desktop/sid task-desktop/sid plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
 apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 #apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
-
+set +x
 
 
 if true; then
