@@ -330,7 +330,7 @@ systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure locales
 systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure keyboard-configuration
 systemd-nspawn -q -D ${MNTROOT} -a fake-hwclock save
 
-echo "rootfstype=$FSTYPE" >${MNTROOT}/etc/default/raspi-extra-cmdline
+echo "rootfstype=$FSTYPE module_blacklist=snd_bcm2835" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
 echo 'disable_overscan=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
 echo 'ROOTPART="LABEL=RASPIROOT"' >>${MNTROOT}/etc/default/raspi-firmware
