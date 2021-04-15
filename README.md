@@ -35,6 +35,9 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * Graphical User Interface can be installed by `tasksel` or `apt-get install task-xfce-desktop`.
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
 
+# Running 32-big kernel on RPi 3 or 4
+32-bit kernel on 64-bit ARM CPU is unsupported by Debian kernel team, unlike the Raspberry Pi OS. `build-raspi-kernel.sh` can build a 32-bit kernel runnable on RPi 3 and 4. Compilation must be done in a Debian 11 Bullseye armhf (container or VM or a real hardware). The missing config item in the Debian kernel is `CONFIG_PCIE_BRCMSTB=m`, which is turned on only for arm64. 
+
 # Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
 * `task-xfce-desktop`, `task-gnome-desktop` and `weston` can be used *with no problem* (incl. YouTube on Firefox) on RPi4 Bullseye with the below workarounds.
 * Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted. Otherwise, pulseaudio does not work well.
