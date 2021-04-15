@@ -26,7 +26,7 @@ elif [ `dpkg --print-architecture` = armhf ]; then
   cat >>.config <<'EOF'
 CONFIG_ARCH_ASPEED=n
 CONFIG_MACH_ASPEED_G6=n
-CONFIG_ARCH_BCM=n
+CONFIG_ARCH_BCM=y
 CONFIG_ARCH_EXYNOS=n
 CONFIG_S5P_DEV_MFC=n
 CONFIG_ARCH_EXYNOS4=n
