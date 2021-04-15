@@ -135,7 +135,7 @@ CONFIG_NTFS_FS=m
 CONFIG_DEBUG_INFO=n
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
-CONFIG_PM=n
+#CONFIG_PM=n
 # Triggers enablement via hibernate callbacks
 CONFIG_XEN=n
 EOF
