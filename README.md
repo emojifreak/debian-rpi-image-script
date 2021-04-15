@@ -35,7 +35,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * Graphical User Interface can be installed by `tasksel` or `apt-get install task-xfce-desktop`.
 * language supports can be installed, for example, by `apt-get install task-japanese task-japanese-desktop`.
 
-# Running 32-big kernel on RPi 3 or 4
+# Running 32-bit kernel on RPi 3 or 4
 32-bit kernel on 64-bit ARM CPU is unsupported by Debian kernel team, unlike the Raspberry Pi OS. `build-raspi-kernel.sh` can build a 32-bit kernel runnable on RPi 3 and 4. Compilation must be done in a Debian 11 Bullseye armhf (container or VM or a real hardware). The missing config item in the Debian kernel is `CONFIG_PCIE_BRCMSTB=m`, which is turned on only for arm64. 
 
 # Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
@@ -46,7 +46,7 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 * [`gdm3` display manager and gnome session fail with vc4.ko because of insufficient CMA](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980536). Adding `cma=192M@256M` to `cmdline.txt` fixes this symptom.
 * ~~[Boot from USB is impossible](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=977694) unlike Linux 5.9. Kernel package capable of USB boot is available at http://153.240.174.134:64193/kernel-deb-5.9/~~
 * WiFi at 5GHz is sometimes blocked by the vc4.ko and high resolution display. `module_blacklist=vc4` in `cmdline.txt` and `hdmi_enable_4kp60=1` could enable both 5GHz WiFi and high resulution simultaneously.
-* The above problem is caused by the wrong firmware `/lib/firmware/brcm/brcmfmac43455-sdio.bin` and `/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob`. To fix this, replace those files by https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm
+* The above problem is caused by the wrong firmware `/lib/firmware/brcm/brcmfmac43455-sdio.bin` and `/lib/firmware/brcm/brcmfmac43455-sdio.clm_blob`. To fix this, replace those files by https://github.com/RPi-Distro/firmware-nonfree/tree/master/brcm . `brcm-firmware.sh` here replaces the firmware by those in Raspberry Pi OS.
 * [5GHz WiFi on RPi4 becomes unusable with firmware-brcm80211 versions newer than 20210201](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=985632). Replacing the above files also fixes this problem.
 * ~~Kernel package in the above URL is built by `build-raspi4-kernel.sh` in this directory.~~
 * ~~[When kernel is booted from USB, `udisks2` consumes lots of CPU power](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=980980). It can be prevented by `systemctl mask udisks2`.~~
