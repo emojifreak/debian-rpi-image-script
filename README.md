@@ -38,7 +38,8 @@ Hardware clock can be corrected by `sntp -S pool.ntp.org` as root.
 # Running 32-bit kernel on RPi 3 or 4
 [32-bit kernel on 64-bit ARM CPU is unsupported by Debian kernel team](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=971059#12), unlike the Raspberry Pi OS. `build-raspi-kernel.sh` can build a 32-bit kernel runnable on RPi 3 and 4. Compilation must be done in a Debian 11 Bullseye armhf (container or VM or a real hardware). The missing config item in the Debian kernel is `CONFIG_PCIE_BRCMSTB=m`, which is turned on only for arm64. 32-bit kernel usable on RPi 3 and 4 are available from http://153.240.174.134:64193/32bit-kernels-for-64bit-raspberrypi/
 
-# Comments on Linux 5.10 and Rapsberry Pi 4 (as of March 2021)
+# Comments on Linux 5.10 and Rapsberry Pi 4 (as of April 2021)
+* I used `linux-image-rt-arm64` Debian kernel 5.10.28, and made an [IPv4 over IPv6 (MAP-E)](https://www.slideshare.net/akiranakagawa3/20150304-apricot2015apnicfukuoka) router by Raspberry Pi 4B 8GB. It can handle packets at 500 Mbits/sec and has no problem in its packet processing capability. 
 * `task-xfce-desktop`, `task-gnome-desktop` and `weston` can be used *with no problem* (incl. YouTube on Firefox) on RPi4 Bullseye with the below workarounds.
 * Both `vc4.ko` and `snd_bcm2835.ko` accesses to HDMI audio outputs. One should be module_blacklisted. Otherwise, pulseaudio does not work well.
 * `drivers/gpu/drm/vc4.ko` enables 4K resolution and DRI/DRM. 4K resolution can be enabled without `vc4.ko` on RPi4 if `hdmi_enable_4kp60=1` is included in `config.txt`.
