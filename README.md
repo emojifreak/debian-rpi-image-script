@@ -22,7 +22,7 @@ Other build shell scripts are listed below.
 
 # raspberripyOS-rpi-sd-builder
 
-Use the kernel from Raspberry Pi OS. Except that, it is the same as above. Use of wayland requires [module_blacklist=v3d](https://github.com/raspberrypi/linux/issues/4202).
+Use the kernel from Raspberry Pi OS. Except that, it is the same as above. Use of *Gnome Wayland* requires [module_blacklist=v3d](https://github.com/raspberrypi/linux/issues/4202). This is a bug in `gnome-shell`.
 
 # devuan-rpi-image-script
 SD card image builder is also available here for Devuan 3 Beowulf, 4 Chimaera and later. Devuan official images are available at https://arm-files.devuan.org/
