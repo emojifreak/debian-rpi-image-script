@@ -19,6 +19,7 @@ cd linux-${KVAR}
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
+  echo 'CONFIG_ZONE_DEVICE=y' >>.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
   ARCH=arm
@@ -182,7 +183,6 @@ CONFIG_HYPERVISOR_GUEST=n
 CONFIG_PARAVIRT=n
 CONFIG_LOCALVERSION="-preempt"
 CONFIG_CLEANCACHE=y
-CONFIG_ZONE_DEVICE=y
 CONFIG_LATENCYTOP=y
 CONFIG_INIT_ON_ALLOC_DEFAULT_ON=n
 CONFIG_BLK_CGROUP_IOLATENCY=y
