@@ -164,7 +164,7 @@ if [ $FSTYPE = btrfs ]; then
 elif  [ $FSTYPE = ext4 ]; then
   mount -o async,lazytime,discard,noatime,nobarrier,journal_async_commit,commit=3600,delalloc,noauto_da_alloc,data=writeback ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 fi
-mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT} - <<EOF
+mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT} - <<EOF
 deb http://archive.raspberrypi.org/debian/ buster main
 deb http://deb.debian.org/debian $MMSUITE main contrib non-free
 EOF
