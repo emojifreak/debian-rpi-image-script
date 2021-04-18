@@ -66,7 +66,7 @@ EOF
       umount -qf ${MNT}
       losetup -d ${LOOPDEVICE}
       rm -rf ${MNT}
-      systemd-run --user --scope -p 'CPUSchedulingPriority=idle' xz -9 $RAWFILE &
+      systemd-run --user -p 'Nice=19' -p 'CPUSchedulingPolicy=idle' xz -9 $RAWFILE &
     done
   done
 done
