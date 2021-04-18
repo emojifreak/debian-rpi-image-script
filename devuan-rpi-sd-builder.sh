@@ -188,9 +188,9 @@ fi
 ) | (
   set -x
   if [ "$MMSUITE" = beowulf ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" $MNTROOT -
+    mmdebstrap '--aptopt=APT::Default-Release "beowulf"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},busybox-static,devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" $MNTROOT -
   else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" $MNTROOT -
+    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},busybox-static,devuan-keyring,sntp,sysvinit-core,eudev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,ifupdown,isc-dhcp-client,${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock,crda  "$MMSUITE" $MNTROOT -
   fi
 )
 
