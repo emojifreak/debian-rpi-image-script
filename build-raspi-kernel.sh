@@ -234,7 +234,7 @@ make oldconfig
 diff -u .config-orig .config | less
 echo "Hit Enter to proceed."
 read tmp
-nice -19 make -j 12 bindeb-pkg
+nice -19 chrt --idle 0 make -j 12 bindeb-pkg
 
 if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
   echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
