@@ -69,6 +69,7 @@ EOF
       chrt --idle 0 xz -9 $RAWFILE &
     done
   done
+  echo "Waiting xz compression to finish..."
+  wait
 done
-echo "Waiting xz compression to finish..."
-wait
+exit 0
