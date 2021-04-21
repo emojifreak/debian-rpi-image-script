@@ -78,16 +78,15 @@ EOF
 
 cat >>/etc/modules <<EOF
 bfq
-kyber
+kyber-iosched
 vhost_net
 vhost_iotlb
-snd_bcm2835 enable_hdmi=0 enable_headphones=1 enable_compat_alsa=1
+#snd_bcm2835 enable_hdmi=0 enable_headphones=1 enable_compat_alsa=1
 EOF
 
 cat >>/etc/initramfs-tools/modules <<EOF
-vc4
 bfq
-kyber
+kyber-iosched
 vhost_net
 vhost_iotlb
 EOF
@@ -98,6 +97,27 @@ ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]", ATTR{queue/sche
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="vd[a-z]", ATTR{queue/scheduler}="bfq"
 EOF
 
+mkdir /etc/systemd/system/apache2.conf.d
+cat >/etc/systemd/system/apache2.conf.d/after.conf
+[Unit]
+After=network-online.target
+Requires=network-online.target
+EOF
+
+cat >/etc/systemd/system/mycpupower.service <<EOF
+[Unit]
+After=modprobe@raspberrypi_cpufreq.service
+Requires=modprobe@raspberrypi_cpufreq.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/cpupower frequency-set -g performance -d 1.5GHz
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable mycpupower.service
+
 echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware
 set -e
 apt-get update
@@ -107,7 +127,7 @@ apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciut
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install postfix mailutils
 apt-get -y --purge --autoremove --install-recommends install task-japanese/sid fonts-noto-cjk-extra 
-apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth
+apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth bc
 
 echo "PermitRootLogin yes" >>/etc/ssh/sshd_config
 
