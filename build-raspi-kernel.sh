@@ -122,9 +122,11 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_FORTIFY_SOURCE=y
 CONFIG_UBSAN=y
-CONFIG_UBSAN_ARRAY_BOUNDS=y
+CONFIG_UBSAN_BOUNDS=y
 CONFIG_UBSAN_SANITIZE_ALL=y
+CONFIG_UBSAN_MISC=y
 CONFIG_KFENCE=y
 CONFIG_STACK_VALIDATION=y
 CONFIG_WQ_WATCHDOG=y
@@ -234,9 +236,9 @@ CONFIG_XEN=n
 EOF
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- oldconfig
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- olddefconfig
 else
-  make oldconfig
+  make olddefconfig
 fi
 diff -u .config-orig .config | less
 echo "Hit Enter to proceed."
