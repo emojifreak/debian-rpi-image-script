@@ -10,6 +10,7 @@ apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
 set -e
+apt-get -q -y --install-recommends install g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi
 apt-get -q -y install linux-config-5.10/sid
 apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
 apt-get -q -y build-dep linux/sid
@@ -231,12 +232,20 @@ CONFIG_HIBERNATION=n
 # Triggers enablement via hibernate callbacks
 CONFIG_XEN=n
 EOF
-make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- oldconfig
+
+if [ `dpkg --print-architecture` = arm64 ]; then
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- oldconfig
+else
+  make oldconfig
+fi
 diff -u .config-orig .config | less
 echo "Hit Enter to proceed."
 read tmp
-nice -19 chrt --idle 0 make -j 12 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- bindeb-pkg
-
+if [ `dpkg --print-architecture` = arm64 ]; then
+  nice -19 chrt --idle 0 make -j 12 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
+else
+  nice -19 chrt --idle 0 make -j 12 bindeb-pkg
+fi
 if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
   echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
   echo 'reset_raspberrypi is added to /etc/initramfs-tools/modules.'
