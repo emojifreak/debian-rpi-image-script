@@ -20,6 +20,7 @@ if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
   echo 'CONFIG_ZONE_DEVICE=y' >>.config
+  echo 'CONFIG_DEVICE_PRIVATE=y' >>.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
   ARCH=arm
@@ -120,12 +121,6 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
-CONFIG_VIRTUALIZATION=y
-CONFIG_KVM=y
-CONFIG_KVM_MMIO=y
-CONFIG_KVM_VFIO=y
-CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
-CONFIG_KVM_ARM_PMU=y
 CONFIG_UBSAN=y
 CONFIG_UBSAN_ARRAY_BOUNDS=y
 CONFIG_UBSAN_SANITIZE_ALL=y
