@@ -244,9 +244,9 @@ diff -u .config-orig .config | less
 echo "Hit Enter to proceed."
 read tmp
 if [ `dpkg --print-architecture` = arm64 ]; then
-  nice -19 chrt --idle 0 make -j 12 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
+  nice -19 chrt --idle 0 make -j 4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
 else
-  nice -19 chrt --idle 0 make -j 12 bindeb-pkg
+  nice -19 chrt --idle 0 make -j 4 bindeb-pkg
 fi
 if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
   echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
