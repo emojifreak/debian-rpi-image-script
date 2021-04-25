@@ -236,9 +236,9 @@ CONFIG_XEN=n
 EOF
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- olddefconfig
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- oldconfig
 else
-  make olddefconfig
+  make oldconfig
 fi
 diff -u .config-orig .config | less
 echo "Hit Enter to proceed."
@@ -252,7 +252,3 @@ if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modu
   echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
   echo 'reset_raspberrypi is added to /etc/initramfs-tools/modules.'
 fi
-
-#CONFIG_ARCH_BCM_IPROC=y
-#CONFIG_ARCH_BRCMSTB=y
-#CONFIG_ARCH_BCM4908=y
