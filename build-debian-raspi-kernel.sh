@@ -12,7 +12,7 @@ cd linux-$KVAR
 
 if true; then
   # Disable debugging for faster kernel
-  cat >>debian/config/arm64/config <<'EOF'
+  cat >>debian/config/config <<'EOF'
 CONFIG_DEBUG_KERNEL=n
 CONFIG_DEBUG_PREEMPT=n
 CONFIG_DEBUG_MISC=n
@@ -21,7 +21,7 @@ CONFIG_BUG_ON_DATA_CORRUPTION=n
 EOF
 else
   # The following config can realize 700 Mbps packet filtering by RPi4B with PREEMPT_RT.
-  cat >>debian/config/arm64/config <<'EOF'
+  cat >>debian/config/config <<'EOF'
 CONFIG_FORTIFY_SOURCE=y
 CONFIG_UBSAN=y
 CONFIG_UBSAN_BOUNDS=y
@@ -37,7 +37,7 @@ CONFIG_WQ_WATCHDOG=y
 EOF
 fi
 
-cat >>debian/config/arm64/config <<'EOF'
+cat >>debian/config/config <<'EOF'
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
 CONFIG_CLEANCACHE=y
