@@ -41,7 +41,6 @@ cat >>debian/config/config <<'EOF'
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
 CONFIG_CLEANCACHE=y
-CONFIG_LATENCYTOP=y
 CONFIG_NFT_REJECT_NETDEV=m
 CONFIG_BPF_JIT_ALWAYS_ON=y
 CONFIG_ZONE_DEVICE=y
@@ -111,6 +110,6 @@ EOF
 
 fakeroot make -f debian/rules.gen setup_arm64_rt_arm64
 fakeroot debian/rules source
-# If you want the ordinary kernel (non-realtime), use binary-arch_arm64_none_arm64
+# If you want the ordinary kernel (non-realtime), use binary-arch_arm64_none_arm64... No this doesn't work!!
 # See https://www.debian.org/doc/manuals/debian-kernel-handbook/ch-common-tasks.html#s-common-official
 fakeroot make -j 4 -f debian/rules.gen binary-arch_arm64_rt_arm64
