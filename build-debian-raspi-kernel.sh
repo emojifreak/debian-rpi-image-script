@@ -10,18 +10,16 @@ set -xe
 apt-get source linux
 cd linux-$KVAR
 
+fakeroot make -f debian/rules.gen setup_arm64_rt_arm64
+
 if true; then
   # Disable debugging for faster kernel
-  cat >>debian/config/config <<'EOF'
-CONFIG_DEBUG_KERNEL=n
+  cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
 CONFIG_DEBUG_PREEMPT=n
-CONFIG_DEBUG_MISC=n
-CONFIG_DEBUG_LIST=n
-CONFIG_BUG_ON_DATA_CORRUPTION=n
 EOF
 else
   # The following config can realize 700 Mbps packet filtering by RPi4B with PREEMPT_RT.
-  cat >>debian/config/config <<'EOF'
+  cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
 CONFIG_FORTIFY_SOURCE=y
 CONFIG_UBSAN=y
 CONFIG_UBSAN_BOUNDS=y
@@ -37,7 +35,7 @@ CONFIG_WQ_WATCHDOG=y
 EOF
 fi
 
-cat >>debian/config/config <<'EOF'
+cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
 CONFIG_CLEANCACHE=y
@@ -108,8 +106,7 @@ CONFIG_ARCH_ZYNQMP=n
 CONFIG_SURFACE_PLATFORMS=n
 EOF
 
-fakeroot make -f debian/rules.gen setup_arm64_rt_arm64
 fakeroot debian/rules source
-# If you want the ordinary kernel (non-realtime), use binary-arch_arm64_none_arm64... No this doesn't work!!
+# If you want the ordinary kernel (non-realtime), replace every "rt" with "none".
 # See https://www.debian.org/doc/manuals/debian-kernel-handbook/ch-common-tasks.html#s-common-official
 fakeroot make -j 4 -f debian/rules.gen binary-arch_arm64_rt_arm64
