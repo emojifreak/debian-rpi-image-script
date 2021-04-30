@@ -122,6 +122,8 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_HOTPLUG_CPU=n
+CONFIG_NUMA=n
 CONFIG_PREEMPT=y
 CONFIG_VIRTUALIZATION=n
 CONFIG_ACPI=n
