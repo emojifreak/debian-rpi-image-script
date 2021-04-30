@@ -1,55 +1,45 @@
 #!/bin/bash
 
-if [ "x$1" != "x" ]; then
-  KVAR=$1
-else
-  echo 'Please give kernel version of Debian linux source package as $1.' 2>&1
-  exit 1
-fi
+KVER=5.10.28
+mkdir -p $HOME/build-${KVER}
+cd $HOME/build-${KVER}
 set -xe
 apt-get source linux
-cd linux-$KVAR
+cd linux-$KVER
 
+# See
+# https://www.debian.org/doc/manuals/debian-kernel-handbook/ch-common-tasks.html#s4.2.3
 fakeroot make -f debian/rules.gen setup_arm64_rt_arm64
-
-if true; then
-  # Disable debugging for faster kernel
-  cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
+cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
+CONFIG_VIRTUALIZATION=n
+CONFIG_ACPI=n
+CONFIG_EFI=n
+CONFIG_LATENCYTOP=y
 CONFIG_DEBUG_PREEMPT=n
-EOF
-else
-  # The following config can realize 700 Mbps packet filtering by RPi4B with PREEMPT_RT.
-  cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
 CONFIG_FORTIFY_SOURCE=y
 CONFIG_UBSAN=y
 CONFIG_UBSAN_BOUNDS=y
 CONFIG_UBSAN_SANITIZE_ALL=y
 CONFIG_UBSAN_MISC=y
 CONFIG_SCHED_STACK_END_CHECK=y
-CONFIG_HARDLOCKUP_DETECTOR=y
 CONFIG_DEBUG_TIMEKEEPING=y
 CONFIG_BUG_ON_DATA_CORRUPTION=y
 CONFIG_KFENCE=y
 CONFIG_STACK_VALIDATION=y
 CONFIG_WQ_WATCHDOG=y
-EOF
-fi
-
-cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
+CONFIG_NFT_REJECT_NETDEV=m
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
-CONFIG_CLEANCACHE=y
-CONFIG_NFT_REJECT_NETDEV=m
 CONFIG_BPF_JIT_ALWAYS_ON=y
 CONFIG_ZONE_DEVICE=y
 CONFIG_DEVICE_PRIVATE=y
 CONFIG_PARAVIRT=n
 CONFIG_XEN=n
+CONFIG_CLEANCACHE=y
 CONFIG_BLK_CGROUP_IOLATENCY=y
 CONFIG_SCSI_DEBUG=m
 CONFIG_IRQ_TIME_ACCOUNTING=y
 CONFIG_SCHED_THERMAL_PRESSURE=y
-CONFIG_CPU_FREQ_THERMAL=y
 CONFIG_UCLAMP_TASK=y
 CONFIG_UCLAMP_TASK_GROUP=y
 CONFIG_IKCONFIG=m
@@ -105,8 +95,5 @@ CONFIG_ARCH_ZX=n
 CONFIG_ARCH_ZYNQMP=n
 CONFIG_SURFACE_PLATFORMS=n
 EOF
-
 fakeroot debian/rules source
-# If you want the ordinary kernel (non-realtime), replace every "rt" with "none".
-# See https://www.debian.org/doc/manuals/debian-kernel-handbook/ch-common-tasks.html#s-common-official
 fakeroot make -j 4 -f debian/rules.gen binary-arch_arm64_rt_arm64
