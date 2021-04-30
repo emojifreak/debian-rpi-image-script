@@ -122,6 +122,7 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_PREEMPT=y
 CONFIG_VIRTUALIZATION=n
 CONFIG_ACPI=n
 CONFIG_EFI=n
