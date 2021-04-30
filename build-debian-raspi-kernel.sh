@@ -11,6 +11,8 @@ cd linux-$KVER
 # https://www.debian.org/doc/manuals/debian-kernel-handbook/ch-common-tasks.html#s4.2.3
 fakeroot make -f debian/rules.gen setup_arm64_rt_arm64
 cat >>debian/build/build_arm64_rt_arm64/.config <<'EOF'
+CONFIG_HOTPLUG_CPU=n
+CONFIG_NUMA=n
 CONFIG_VIRTUALIZATION=n
 CONFIG_ACPI=n
 CONFIG_EFI=n
