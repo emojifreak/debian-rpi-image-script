@@ -118,7 +118,7 @@ apt-get -y --purge   --no-install-recommends install appmenu-gtk3-module libcanb
 #apt-get -y --purge   --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
 apt-get -y --purge   --no-install-recommends install weston xserver-xorg-core xserver-xorg-input-all pulseaudio pulseaudio-utils pulseaudio-module-bluetooth alsa-ucm-conf xdg-user-dirs-gtk xdg-user-dirs xdg-utils
 apt-get -y --purge   --install-recommends install firefox-esr-l10n-ja mrboom fonts-noto-color-emoji
-apt-get -y --purge   --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
+#apt-get -y --purge   --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
 #apt-get -y --purge   --no-install-recommends install task-gnome-desktop/bullseye task-desktop/bullseye gdm3  gnome-keyring  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager
 #apt-get -y --purge   --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd xfce4-power-manager pavucontrol xiccd xfce4-power-manager-plugins
 #apt-get -y --purge   --no-install-recommends install kde-full qml-module-qtwayland-compositor qml-module-qtwayland-client-texturesharing task-kde-desktop/bullseye task-desktop/bullseye plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
@@ -127,7 +127,7 @@ apt-get -y --purge   --no-install-recommends install network-manager-gnome dconf
 #apt-get -y --purge   --install-recommends install task-japanese-desktop/bullseye task-xfce-desktop/bullseye task-desktop/bullseye
 
 
-if true; then
+if false; then
   cat >/etc/systemd/system/btrfsscrub.service <<'EOF'
 [Service]
 Type=oneshot
