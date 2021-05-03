@@ -212,14 +212,26 @@ CONFIG_SURFACE_PLATFORMS=n
 #CONFIG_PM=n
 EOF
 
-if [ `dpkg --print-architecture` = arm64 ]; then
-  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- oldconfig
+if [ -t 0 ]; then
+  config=oldconfig
 else
-  make oldconfig
+  config=olddefconfig
 fi
-diff -u .config-orig .config | less
-echo "Hit Enter to proceed."
-read tmp
+
+if [ `dpkg --print-architecture` = arm64 ]; then
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- $config
+else
+  make $config
+fi
+
+if [ -t 0 ]; then
+  diff -u .config-orig .config | less
+  echo "Hit Enter to proceed."
+  read tmp
+else
+  diff -u .config-orig .config
+fi
+
 if [ `dpkg --print-architecture` = arm64 ]; then
   nice -19 chrt --idle 0 make -j 4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
 else
