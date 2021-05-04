@@ -233,9 +233,9 @@ else
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  nice -19 chrt --idle 0 make -j 4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
+  make -j 4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
 else
-  nice -19 chrt --idle 0 make -j 4 bindeb-pkg
+  make -j 4 bindeb-pkg
 fi
 if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
   echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
