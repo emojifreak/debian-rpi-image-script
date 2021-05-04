@@ -229,7 +229,9 @@ if [ -t 0 ]; then
   echo "Hit Enter to proceed."
   read tmp
 else
+  set +x
   diff -u .config-orig .config
+  set -x
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
