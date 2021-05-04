@@ -27,6 +27,7 @@ elif [ `dpkg --print-architecture` = armhf ]; then
   ARCH=arm
   export ARCH
   cat >>.config <<'EOF'
+CONFIG_VIRTUALIZATION=n
 CONFIG_ARCH_ASPEED=n
 CONFIG_MACH_ASPEED_G6=n
 CONFIG_ARCH_BCM=y
@@ -125,7 +126,6 @@ cat >>.config <<'EOF'
 CONFIG_HOTPLUG_CPU=n
 CONFIG_NUMA=n
 CONFIG_PREEMPT=y
-CONFIG_VIRTUALIZATION=n
 CONFIG_ACPI=n
 CONFIG_EFI=n
 CONFIG_LATENCYTOP=y
@@ -229,9 +229,9 @@ if [ -t 0 ]; then
   echo "Hit Enter to proceed."
   read tmp
 else
-  set +x
+  set +e
   diff -u .config-orig .config
-  set -x
+  set -e
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
