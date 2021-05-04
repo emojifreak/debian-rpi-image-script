@@ -10,7 +10,6 @@ apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
 set -e
-apt-get -q -y --install-recommends install g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi
 apt-get -q -y install linux-config-5.10/sid
 apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
 apt-get -q -y build-dep linux/sid
@@ -19,6 +18,7 @@ cd linux-${KVAR}
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
+  apt-get -q -y --install-recommends install g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
   echo 'CONFIG_ZONE_DEVICE=y' >>.config
   echo 'CONFIG_DEVICE_PRIVATE=y' >>.config
