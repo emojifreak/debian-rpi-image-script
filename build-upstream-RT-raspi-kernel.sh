@@ -242,7 +242,3 @@ if [ `dpkg --print-architecture` = arm64 ]; then
 else
   make -j 4 bindeb-pkg
 fi
-if ! fgrep -q reset /etc/initramfs-tools/modules /usr/share/initramfs-tools/modules.d/*; then
-  echo "reset_raspberrypi" >>/etc/initramfs-tools/modules
-  echo 'reset_raspberrypi is added to /etc/initramfs-tools/modules.'
-fi
