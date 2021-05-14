@@ -124,6 +124,8 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_HZ_250=n
+CONFIG_HZ_100=y
 CONFIG_VIRTUALIZATION=n
 CONFIG_LOCALVERSION=-preempt
 CONFIG_PREEMPT_RT=y
