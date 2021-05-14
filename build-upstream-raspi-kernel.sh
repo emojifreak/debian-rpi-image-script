@@ -123,6 +123,8 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_HZ_250=n
+CONFIG_HZ_100=y
 CONFIG_LOCALVERSION=-preempt
 CONFIG_PREEMPT=y
 CCONFIG_HOTPLUG_CPU=n
