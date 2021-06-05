@@ -6,7 +6,7 @@ set -xe
 wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
 tar Jxf linux-${KVAR}.tar.xz &
 pid=$!
-wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/patch-5.10.35-rt39.patch.xz
+wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/patch-5.10.41-rt42.patch.xz
 apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
@@ -16,7 +16,7 @@ apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
 apt-get -q -y build-dep linux/sid
 wait $pid
 cd linux-${KVAR}
-xzcat ../patch-5.10.35-rt39.patch.xz | patch --quiet -p1
+xzcat ../patch-5.10.41-rt42.patch.xz | patch --quiet -p1
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_rt_arm64.xz >.config
@@ -143,7 +143,7 @@ CONFIG_UBSAN_SANITIZE_ALL=y
 CONFIG_UBSAN_MISC=y
 CONFIG_UBSAN_UNREACHABLE=y
 CONFIG_SCHED_STACK_END_CHECK=y
-CONFIG_DEBUG_TIMEKEEPING=y
+#CONFIG_DEBUG_TIMEKEEPING=y
 CONFIG_BUG_ON_DATA_CORRUPTION=y
 CONFIG_KFENCE=y
 CONFIG_STACK_VALIDATION=y
