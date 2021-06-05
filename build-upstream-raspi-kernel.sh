@@ -239,7 +239,7 @@ else
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make -j 4 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
+  make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
 else
-  make -j 4 bindeb-pkg
+  make -j 3 bindeb-pkg
 fi
