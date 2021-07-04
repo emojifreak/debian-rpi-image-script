@@ -3,10 +3,10 @@
 echo -n "Kernel version: "
 read KVAR
 set -xe
-wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
+wget -T 10 https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
 tar Jxf linux-${KVAR}.tar.xz &
 pid=$!
-wget http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/patch-5.10.41-rt42.patch.xz
+wget -T 10 http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/patch-5.10.47-rt45.patch.xz
 apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
@@ -16,7 +16,7 @@ apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
 apt-get -q -y build-dep linux/sid
 wait $pid
 cd linux-${KVAR}
-xzcat ../patch-5.10.41-rt42.patch.xz | patch --quiet -p1
+xzcat ../patch-5.10.47-rt45.patch.xz | patch --quiet -p1
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_rt_arm64.xz >.config
@@ -242,5 +242,5 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
 else
-  make -j 3 bindeb-pkg
+  make -j 2 bindeb-pkg
 fi
