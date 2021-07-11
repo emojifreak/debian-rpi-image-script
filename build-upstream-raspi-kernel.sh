@@ -27,6 +27,7 @@ elif [ `dpkg --print-architecture` = armhf ]; then
   ARCH=arm
   export ARCH
   cat >>.config <<'EOF'
+CONFIG_CPU_SW_DOMAIN_PAN=y
 CONFIG_VIRTUALIZATION=n
 CONFIG_ARCH_ASPEED=n
 CONFIG_MACH_ASPEED_G6=n
@@ -123,6 +124,7 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_ARM64_SW_TTBR0_PAN=y
 CONFIG_HZ_250=n
 CONFIG_HZ_100=y
 CONFIG_LOCALVERSION=-preempt
