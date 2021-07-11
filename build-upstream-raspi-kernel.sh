@@ -225,7 +225,7 @@ else
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- $config
+  make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
 else
   make $config
 fi
@@ -241,7 +241,7 @@ else
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabi- bindeb-pkg
+  make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
   make -j 2 bindeb-pkg
 fi
