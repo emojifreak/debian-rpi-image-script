@@ -6,24 +6,25 @@ set -xe
 wget -T 10 https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
 tar Jxf linux-${KVAR}.tar.xz &
 pid=$!
-wget -T 10 http://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/patch-5.10.47-rt45.patch.xz
+wget -T 10 https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.47-rt46.patch.xz
 apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
 set -e
-apt-get -q -y install linux-config-5.10/sid
-apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
-apt-get -q -y build-dep linux/sid
+apt-get -q -y install linux-config-5.10
+apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev gcc-10-plugin-dev
+apt-get -q -y build-dep linux
 wait $pid
 cd linux-${KVAR}
-xzcat ../patch-5.10.47-rt45.patch.xz | patch --quiet -p1
+xzcat ../patch-5.10.47-rt46.patch.xz | patch --quiet -p1
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_rt_arm64.xz >.config
-  apt-get -q -y --install-recommends install g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi
+  apt-get -q -y --install-recommends install g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf cpp-arm-linux-gnueabihf gcc-10-plugin-dev-arm-linux-gnueabihf
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
   echo 'CONFIG_ZONE_DEVICE=y' >>.config
   echo 'CONFIG_DEVICE_PRIVATE=y' >>.config
+  echo 'CONFIG_ARM64_SW_TTBR0_PAN=y' >>.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
   ARCH=arm
@@ -126,7 +127,7 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
-CONFIG_ARM64_SW_TTBR0_PAN=y
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
 CONFIG_GCC_PLUGINS=y
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
 CONFIG_GCC_PLUGIN_STRUCTLEAK=y
