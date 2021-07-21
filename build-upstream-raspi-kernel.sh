@@ -10,18 +10,19 @@ apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
 set -e
-apt-get -q -y install linux-config-5.10/sid
-apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev
-apt-get -q -y build-dep linux/sid
+apt-get -q -y install linux-config-5.10
+apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev  gcc-10-plugin-dev
+apt-get -q -y build-dep linux
 wait $pid
 cd linux-${KVAR}
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_none_arm64.xz >.config
-  apt-get -q -y --install-recommends install g++-arm-linux-gnueabi gcc-arm-linux-gnueabi cpp-arm-linux-gnueabi
+  apt-get -q -y --install-recommends install g++-arm-linux-gnueabihf gcc-arm-linux-gnueabihf cpp-arm-linux-gnueabihf gcc-10-plugin-dev-arm-linux-gnueabihf
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
   echo 'CONFIG_ZONE_DEVICE=y' >>.config
   echo 'CONFIG_DEVICE_PRIVATE=y' >>.config
+  echo 'CONFIG_ARM64_SW_TTBR0_PAN=y' >>.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
   ARCH=arm
@@ -124,15 +125,15 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
 CONFIG_GCC_PLUGINS=y
 CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
 CONFIG_GCC_PLUGIN_STRUCTLEAK=y
 CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
 CONFIG_GCC_PLUGIN_STACKLEAK=y
-CONFIG_ARM64_SW_TTBR0_PAN=y
+
 CONFIG_HZ_250=n
 CONFIG_HZ_100=y
-CONFIG_LOCALVERSION=-preempt
 CONFIG_PREEMPT_VOLUNTARY=n
 CONFIG_PREEMPT=y
 CCONFIG_HOTPLUG_CPU=n
@@ -149,7 +150,7 @@ CONFIG_UBSAN_SANITIZE_ALL=y
 CONFIG_UBSAN_MISC=y
 CONFIG_UBSAN_UNREACHABLE=y
 CONFIG_SCHED_STACK_END_CHECK=y
-CONFIG_DEBUG_TIMEKEEPING=y
+CONFIG_DEBUG_TIMEKEEPING=n
 CONFIG_BUG_ON_DATA_CORRUPTION=y
 CONFIG_KFENCE=y
 CONFIG_STACK_VALIDATION=y
