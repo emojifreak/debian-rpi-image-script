@@ -6,7 +6,7 @@ set -xe
 wget -T 10 https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
 tar Jxf linux-${KVAR}.tar.xz &
 pid=$!
-wget -T 10 https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.47-rt46.patch.xz
+wget -T 10 https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.52-rt47.patch.xz
 apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
@@ -16,7 +16,7 @@ apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev gcc-10-pl
 apt-get -q -y build-dep linux
 wait $pid
 cd linux-${KVAR}
-xzcat ../patch-5.10.47-rt46.patch.xz | patch --quiet -p1
+xzcat ../patch-5.10.52-rt47.patch.xz | patch --quiet -p1
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_rt_arm64.xz >.config
@@ -24,12 +24,15 @@ if [ `dpkg --print-architecture` = arm64 ]; then
   echo 'CONFIG_BPF_JIT_ALWAYS_ON=y' >>.config
   echo 'CONFIG_ZONE_DEVICE=y' >>.config
   echo 'CONFIG_DEVICE_PRIVATE=y' >>.config
+  echo 'CONFIG_ARCH_MMAP_RND_BITS=33' >>.config
+  echo 'CONFIG_ARCH_MMAP_RND_COMPAT_BITS=16' >>.config
   echo 'CONFIG_ARM64_SW_TTBR0_PAN=y' >>.config
 elif [ `dpkg --print-architecture` = armhf ]; then
   xzcat /usr/src/linux-config-5.10/config.armhf_none_armmp-lpae.xz >.config
   ARCH=arm
   export ARCH
   cat >>.config <<'EOF'
+CONFIG_ARCH_MMAP_RND_BITS=16
 CONFIG_CPU_SW_DOMAIN_PAN=y
 CONFIG_VIRTUALIZATION=n
 CONFIG_ARCH_ASPEED=n
@@ -127,23 +130,27 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
-CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
-CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
-CONFIG_GCC_PLUGINS=y
-CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
-CONFIG_GCC_PLUGIN_STRUCTLEAK=y
-CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
-CONFIG_GCC_PLUGIN_STACKLEAK=y
-
+CONFIG_USERFAULTFD=n
+CONFIG_CGROUP_MISC=y
+CONFIG_ARCH_APPLE=n
+CONFIG_ARCH_INTEL_SOCFPGA=n
+CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT=y
+CONFIG_NET_VENDOR_MICROSOFT=n
+CONFIG_PWM_RASPBERRYPI_POE=m
+CONFIG_NVMEM_RMEM=m
+CONFIG_NETFS_STATS=y
+CONFIG_UBSAN_SHIFT=y
+CONFIG_DEBUG_IRQFLAGS=y
 CONFIG_HZ_250=n
 CONFIG_HZ_100=y
-CONFIG_VIRTUALIZATION=n
-CONFIG_LOCALVERSION=-preempt
 CONFIG_PREEMPT_RT=y
-CCONFIG_HOTPLUG_CPU=n
+# https://wiki.linuxfoundation.org/realtime/documentation/howto/applications/preemptrt_setup
+CONFIG_HOTPLUG_CPU=n
 CONFIG_NUMA=n
-ONFIG_ACPI=n
+CONFIG_VIRTUALIZATION=n
+CONFIG_ACPI=n
 CONFIG_EFI=n
+CONFIG_SECURITY_TOMOYO=n
 CONFIG_LATENCYTOP=y
 CONFIG_DEBUG_INFO=n
 CONFIG_DEBUG_PREEMPT=y
@@ -160,7 +167,6 @@ CONFIG_KFENCE=y
 CONFIG_STACK_VALIDATION=y
 CONFIG_WQ_WATCHDOG=y
 CONFIG_NFT_REJECT_NETDEV=m
-CONFIG_IP_VS_TWOS=m
 CONFIG_SUSPEND=n
 CONFIG_HIBERNATION=n
 CONFIG_PARAVIRT=n
@@ -182,7 +188,7 @@ CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY=m
 CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN=m
 CONFIG_PI433=m
 CONFIG_PCIE_BRCMSTB=m
-CONFIG_LEDS_TRIGGER_TTY=m
+
 # ARM64 architectures other than RPi
 CONFIG_ARCH_N5X=n
 CONFIG_ARCH_ACTIONS=n
@@ -225,7 +231,16 @@ CONFIG_ARCH_XGENE=n
 CONFIG_ARCH_ZX=n
 CONFIG_ARCH_ZYNQMP=n
 CONFIG_SURFACE_PLATFORMS=n
-#CONFIG_PM=n
+
+CONFIG_COMPAT_VDSO=n
+CONFIG_DEVMEM=n
+CONFIG_DEFAULT_MMAP_MIN_ADDR=32768
+CONFIG_KEXEC=n
+CONFIG_GCC_PLUGINS=y
+CONFIG_GCC_PLUGIN_LATENT_ENTROPY=y
+CONFIG_GCC_PLUGIN_STRUCTLEAK=y
+CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL=y
+CONFIG_GCC_PLUGIN_STACKLEAK=y
 EOF
 
 if [ -t 0 ]; then
