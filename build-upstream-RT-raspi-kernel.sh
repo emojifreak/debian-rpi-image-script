@@ -265,6 +265,10 @@ else
   set -e
 fi
 
+# KCFLAGS=-mcpu=cortex-a72 for RPi4
+# KCFLAGS=-mcpu=cortex-a53 for RPi3
+# KCFLAGS=-mcpu=cortex-a7 for RPi2
+
 if [ `dpkg --print-architecture` = arm64 ]; then
   make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
