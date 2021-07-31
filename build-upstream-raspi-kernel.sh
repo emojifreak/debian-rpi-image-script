@@ -252,7 +252,7 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make ARCH=arm64 LOCALVERSION=-preempt CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
 else
-  make LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53+crc" $config
+  make LOCALVERSION=-preempt KCFLAGS="-pipe" $config
 fi
 
 if [ -t 0 ]; then
@@ -272,5 +272,5 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make -j 3 LOCALVERSION=-preempt ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
-  make -j 2 LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53+crc" bindeb-pkg
+  make -j 2 LOCALVERSION=-preempt KCFLAGS="-pipe" bindeb-pkg
 fi
