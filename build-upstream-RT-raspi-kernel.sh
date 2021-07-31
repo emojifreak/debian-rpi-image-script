@@ -252,7 +252,7 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
 else
-  make KCFLAGS="-march=armv8-a -mcpu=cortex-a53" $config
+  make KCFLAGS="-march=armv8-a+crc -mtune=cortex-a53+crc" $config
 fi
 
 if [ -t 0 ]; then
@@ -272,5 +272,5 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make -j 3 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
-  make -j 2 KCFLAGS="-march=armv8-a -mcpu=cortex-a53" bindeb-pkg
+  make -j 2 KCFLAGS="-march=armv8-a+crc -mtune=cortex-a53+crc" bindeb-pkg
 fi
