@@ -252,7 +252,7 @@ fi
 if [ `dpkg --print-architecture` = arm64 ]; then
   make ARCH=arm64 LOCALVERSION=-preempt CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
 else
-  make LOCALVERSION=-preempt KCFLAGS="-march=armv8-a+crc -mcpu=cortex-a53+crc" $config
+  make LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53+crc" $config
 fi
 
 if [ -t 0 ]; then
@@ -265,12 +265,12 @@ else
   set -e
 fi
 
-# KCFLAGS=-mcpu=cortex-a72 for RPi4
-# KCFLAGS=-mcpu=cortex-a53 for RPi3
-# KCFLAGS=-mcpu=cortex-a7 for RPi2
+# KCFLAGS=-mtune=cortex-a72+crc for RPi4
+# KCFLAGS=-mtune=cortex-a53+crc for RPi3
+# KCFLAGS=-mtune=cortex-a7 for RPi2
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   make -j 3 LOCALVERSION=-preempt ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
-  make -j 2 LOCALVERSION=-preempt KCFLAGS="-march=armv8-a+crc -mtune=cortex-a53+crc" bindeb-pkg
+  make -j 2 LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53+crc" bindeb-pkg
 fi
