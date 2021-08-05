@@ -130,6 +130,39 @@ else
 fi
 cp .config .config-orig
 cat >>.config <<'EOF'
+CONFIG_CRYPTO_AEGIS128_SIMD=n
+CONFIG_ARM64_HW_AFDBM=n
+CONFIG_ARM64_PAN=n
+CONFIG_AS_HAS_LSE_ATOMICS=n
+CONFIG_ARM64_LSE_ATOMICS=n
+CONFIG_ARM64_USE_LSE_ATOMICS=n
+CONFIG_ARM64_VHE=n
+CONFIG_ARM64_UAO=n
+CONFIG_ARM64_PMEM=n
+CONFIG_ARM64_RAS_EXTN=n
+CONFIG_ARM64_CNP=n
+CONFIG_ARM64_PTR_AUTH=n
+CONFIG_CC_HAS_BRANCH_PROT_PAC_RET=n
+CONFIG_CC_HAS_SIGN_RETURN_ADDRESS=n
+CONFIG_AS_HAS_PAC=n
+CONFIG_AS_HAS_CFI_NEGATE_RA_STATE=n
+CONFIG_ARM64_AMU_EXTN=n
+CONFIG_AS_HAS_ARMV8_4=n
+CONFIG_ARM64_TLB_RANGE=n
+CONFIG_ARM64_BTI=n
+CONFIG_ARM64_BTI_KERNEL=n
+CONFIG_CC_HAS_BRANCH_PROT_PAC_RET_BTI=n
+CONFIG_ARM64_E0PD=n
+CONFIG_ARCH_RANDOM=n
+CONFIG_ARM64_AS_HAS_MTE=n
+CONFIG_ARM64_MTE=n
+CONFIG_ARM_SMMU_V3_SVA=y
+CONFIG_GOOGLE_FIRMWARE=n
+CONFIG_CHROME_PLATFORMS=n
+
+CONFIG_ARM_PSCI_FW=n
+CONFIG_CPU_IDLE=n
+
 CONFIG_USERFAULTFD=n
 CONFIG_CGROUP_MISC=y
 CONFIG_ARCH_APPLE=n
@@ -250,7 +283,7 @@ else
 fi
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make ARCH=arm64 KCFLAGS="-mcpu=cortex-a53+crc" LOCALVERSION=-preempt CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
+  make ARCH=arm64 KCFLAGS="-march=armv8-a+crc -mtune=cortex-a53" LOCALVERSION=-preempt CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- $config
 else
   make LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53" $config
 fi
@@ -270,7 +303,7 @@ fi
 # KCFLAGS=-mcpu=cortex-a7 for RPi2
 
 if [ `dpkg --print-architecture` = arm64 ]; then
-  make -j 3 LOCALVERSION=-preempt ARCH=arm64 KCFLAGS="-mcpu=cortex-a53+crc" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
+  make -j 3 LOCALVERSION=-preempt ARCH=arm64 KCFLAGS="-march=armv8-a+crc -mtune=cortex-a53" CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- bindeb-pkg
 else
   make -j 2 LOCALVERSION=-preempt KCFLAGS="-mtune=cortex-a53" bindeb-pkg
 fi
