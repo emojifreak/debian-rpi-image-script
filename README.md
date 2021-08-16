@@ -1,4 +1,4 @@
-Built images are available at http://153.240.174.134:64193/RPi-boot-images/ built by `auto-image-builder.sh` **(images refreshed on 18 April 2021)**.
+Built images are available at http://153.240.174.134:64193/RPi-boot-images/ built by `auto-image-builder.sh` **(images refreshed on 16 August 2021 after Debian 11 Bullseye release)**.
 **Now these images support USB booting if you have updated the RPi firmware** as https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/msd.md .
 
 Warning: You need [a recent version of qemu-user-static package](https://packages.debian.org/sid/qemu-user-static). Otherwise the scripts here will probably fail.
