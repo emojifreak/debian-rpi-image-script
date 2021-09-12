@@ -6,7 +6,7 @@ set -xe
 wget -T 10 https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KVAR}.tar.xz
 tar Jxf linux-${KVAR}.tar.xz &
 pid=$!
-wget -T 10 https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.52-rt47.patch.xz
+wget -T 10 https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.59-rt52.patch.xz
 apt-get -q -y update
 set +e
 apt-get --purge dist-upgrade
@@ -16,7 +16,7 @@ apt-get -q -y install build-essential libncurses-dev fakeroot dpkg-dev gcc-10-pl
 apt-get -q -y build-dep linux
 wait $pid
 cd linux-${KVAR}
-xzcat ../patch-5.10.52-rt47.patch.xz | patch --quiet -p1
+xzcat ../patch-5.10.59-rt52.patch.xz | patch --quiet -p1
 
 if [ `dpkg --print-architecture` = arm64 ]; then
   xzcat /usr/src/linux-config-5.10/config.arm64_rt_arm64.xz >.config
