@@ -1,3 +1,5 @@
+**NEW**: kernel build script by clang is available at https://gist.github.com/emojifreak/180b335cd58edd9a64fc42b85f735c6d
+
 Built images are available at http://114.150.218.139:63873/RPi-boot-images/ built by `auto-image-builder.sh` **(images refreshed on 16 August 2021 after Debian 11 Bullseye release)**.
 **Now these images support USB booting if you have updated the RPi firmware** as https://www.raspberrypi.org/documentation/hardware/raspberrypi/bootmodes/msd.md .
 
