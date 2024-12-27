@@ -18,17 +18,17 @@ SDL_RENDER_DRIVER=opengles2
 SDL_VIDEO_GLES2=1
 EOF
 cat >/etc/apt/apt.conf.d/00myconf <<EOF
-APT::Default-Release "bullseye";
+%APT::Default-Release "bullseye";
 APT::Install-Recommends 0;
 APT::Get::Purge 1;
 APT::Get::Upgrade-Allow-New 1;
 EOF
-cat >>/etc/apt/sources.list <<EOF
-deb http://deb.debian.org/debian sid main contrib non-free
-deb-src http://deb.debian.org/debian sid main contrib non-free
-deb http://deb.debian.org/debian experimental main contrib non-free
-deb-src http://deb.debian.org/debian experimental main contrib non-free
-EOF
+#cat >>/etc/apt/sources.list <<EOF
+#deb http://deb.debian.org/debian sid main contrib non-free
+#deb-src http://deb.debian.org/debian sid main contrib non-free
+#deb http://deb.debian.org/debian experimental main contrib non-free
+#deb-src http://deb.debian.org/debian experimental main contrib non-free
+#EOF
 
 cat >>/root/.bashrc <<EOF
 export LANG=C.UTF-8
@@ -40,7 +40,7 @@ for d in journald logind networkd user system; do
 done
 cat >/etc/systemd/journald.conf.d/storage.conf <<EOF
 [Journal]
-Storage=volatile
+Storage=persistent
 Compress=no
 EOF
 
@@ -76,19 +76,26 @@ DefaultMemoryAccounting=yes
 DefaultTasksAccounting=yes
 EOF
 
-cat >>/etc/modules <<EOF
+cat >/etc/modules <<EOF
+reset_raspberrypi
+raspberrypi_cpufreq
+raspberrypi_hwmon
 bfq
 kyber-iosched
-vhost_net
-vhost_iotlb
-#snd_bcm2835 enable_hdmi=0 enable_headphones=1 enable_compat_alsa=1
+tcp_bbr
+jitterentropy_rng
+iproc_rng200
 EOF
 
-cat >>/etc/initramfs-tools/modules <<EOF
+cat >/etc/initramfs-tools/modules <<EOF
+reset_raspberrypi
+raspberrypi_cpufreq
+raspberrypi_hwmon
 bfq
 kyber-iosched
-vhost_net
-vhost_iotlb
+tcp_bbr
+jitterentropy_rng
+iproc_rng200
 EOF
 
 cat >/etc/udev/rules.d/60-block-scheduler.rules <<'EOF'
@@ -98,7 +105,7 @@ ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="vd[a-z]", ATTR{queue/schedule
 EOF
 
 mkdir /etc/systemd/system/apache2.conf.d
-cat >/etc/systemd/system/apache2.conf.d/after.conf
+cat >/etc/systemd/system/apache2.conf.d/after.conf <<'EOF'
 [Unit]
 After=network-online.target
 Requires=network-online.target
@@ -111,7 +118,7 @@ Requires=modprobe@raspberrypi_cpufreq.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/cpupower frequency-set -g performance -d 1.5GHz
+ExecStart=/usr/bin/cpupower frequency-set -g schedutil -d 0.6GHz
 
 [Install]
 WantedBy=multi-user.target
@@ -121,31 +128,37 @@ systemctl enable mycpupower.service
 echo 'CMA="256M@256M"' >>/etc/default/raspi-firmware
 set -e
 apt-get update
-apt-get -y --purge --autoremove --install-recommends install  tasksel/sid tasksel-data/sid
+apt-get -y --purge --autoremove --install-recommends install  tasksel tasksel-data
 apt-get -y --purge --autoremove --no-install-recommends install systemd-cron dbus-user-session libnss-systemd libpam-systemd
 apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciutils usbutils bluetooth  bluez bluez-firmware
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install postfix mailutils
-apt-get -y --purge --autoremove --install-recommends install task-japanese/sid fonts-noto-cjk-extra 
-apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth bc
+apt-get -y --purge --autoremove --install-recommends install task-japanese fonts-noto-cjk-extra 
+apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test #qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth bc
 
-echo "PermitRootLogin yes" >>/etc/ssh/sshd_config
+mkdir /etc/ssh/sshd_config.d
+cat >/etc/ssh/sshd_config.d/nopassword.conf <<EOF
+PasswordAuthentication no
+ChallengeResponseAuthentication no
+KbdInteractiveAuthentication no
+UsePAM yes
+EOF
 
 apt-get -y --purge --autoremove --no-install-recommends install unzip fontconfig
-
 apt-get -y --purge --autoremove --no-install-recommends install emacs-nox emacs-el emacs-common-non-dfsg
+
 apt-get -y --purge --autoremove --no-install-recommends install  libavcodec-extra libavfilter-extra va-driver-all vdpau-driver-all mesa-vulkan-drivers
-apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-module libcanberra-gtk3-module
+#apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-module libcanberra-gtk3-module
 #apt-get -y --purge --autoremove --install-recommends install tigervnc-standalone-server
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
-apt-get -y --purge --autoremove --no-install-recommends install weston xserver-xorg-core xserver-xorg-input-all pulseaudio pulseaudio-utils pulseaudio-module-bluetooth alsa-ucm-conf xdg-user-dirs-gtk xdg-user-dirs xdg-utils
-apt-get -y --purge --autoremove --install-recommends install firefox-esr-l10n-ja mrboom fonts-noto-color-emoji
-apt-get -y --purge --autoremove --no-install-recommends install accountsservice
-apt-get -y --purge --autoremove --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
+#apt-get -y --purge --autoremove --no-install-recommends install weston xserver-xorg-core xserver-xorg-input-all pulseaudio pulseaudio-utils pulseaudio-module-bluetooth alsa-ucm-conf xdg-user-dirs-gtk xdg-user-dirs xdg-utils
+#apt-get -y --purge --autoremove --install-recommends install firefox-esr-l10n-ja mrboom fonts-noto-color-emoji
+#apt-get -y --purge --autoremove --no-install-recommends install accountsservice
+#apt-get -y --purge --autoremove --no-install-recommends install network-manager-gnome dconf-gsettings-backend gconf-gsettings-backend network-manager-config-connectivity-debian
 #apt-get -y --purge --autoremove --no-install-recommends install task-gnome-desktop/sid task-desktop/sid gdm3  gnome-keyring  gnome-screenshot 	gnome-maps 	gnome-color-manager avahi-daemon 	cups-pk-helper 	gnome-tweaks libproxy1-plugin-gsettings libproxy1-plugin-networkmanager
-apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd pavucontrol xiccd task-desktop/sid task-xfce-desktop/sid
+#apt-get -y --purge --autoremove --no-install-recommends install xfce4 xfce4-goodies xfce4-notifyd pavucontrol xiccd task-desktop/sid task-xfce-desktop/sid
 #apt-get -y --purge --autoremove --no-install-recommends install kde-full qml-module-qtwayland-compositor qml-module-qtwayland-client-texturesharing task-kde-desktop/sid task-desktop/sid plasma-workspace-wayland dragonplayer plasma-nm sddm-theme-debian-maui
-apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
+#apt-get -y --purge --autoremove --install-recommends install task-japanese-desktop/sid
 #apt-get -y --purge --autoremove --install-recommends install ibus-gtk3 ibus-gtk ibus-mozc mozc-utils-gui ibus-anthy ibus-wayland im-config
 set +x
 
@@ -170,14 +183,14 @@ fi
 
 rm /etc/resolv.conf
 cat >/etc/resolv.conf <<EOF
-options edns0
+options inet6 edns0 trust-ad use-vc
 nameserver 192.168.1.2
 EOF
 chmod a-w /etc/resolv.conf
 
-apt-get -y --purge --autoremove purge ifupdown isc-dhcp-client isc-dhcp-common python2.7-minimal
+apt-get -y --purge --autoremove purge ifupdown isc-dhcp-client isc-dhcp-common
 
-
+exit 0
 echo -n "Ordinary login user: "
 read NONROOTUSER
 adduser $NONROOTUSER
