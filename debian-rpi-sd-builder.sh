@@ -159,7 +159,7 @@ if [ $NETWORK = ifupdown ]; then
 elif [ $NETWORK = network-manager ]; then
   NETPKG=network-manager,crda
 elif [ $NETWORK = systemd-networkd ]; then
-  NETPKG=systemd
+  NETPKG=systemd,systemd-resolved
 else
   NETPKG=iproute2,iw
 fi
