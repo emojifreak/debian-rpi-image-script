@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apt-get -q -y install mmdebstrap qemu-user-static binfmt-support fdisk gdisk dosfstools systemd-container
+apt-get -q -y install mmdebstrap qemu-user-static binfmt-support fdisk gdisk dosfstools systemd-container debian-archive-keyring
 
 MNTROOT=`mktemp -d`
 MNTFIRM=`mktemp -d`
@@ -122,13 +122,13 @@ read FSTYPE
 dd of=${DEVFILE}${PARTCHAR}2 if=/dev/zero count=512
 eval mkfs.${FSTYPE} -L RASPIROOT ${DEVFILE}${PARTCHAR}2
 
-echo -n "Debian Suite (buster, bullseye or sid): "
+echo -n "Debian Suite (bookworm, testing or sid): "
 read MMSUITE
 cat <<EOF
 Explanation of architectures:
 armel for Raspberry Pi Zero, Zero W and 1,
 armhf for Raspberry Pi 2,
-arm64 for Raspberry Pi 3 and 4.
+arm64 for Raspberry Pi 3, 4 and 5.
 32-bit kernel is unsupported on 64-bit ARM CPUs.
 EOF
 echo -n 'Architecture ("armel", "armhf", "arm64", or "armhf,arm64"): '
@@ -139,26 +139,14 @@ echo "As defined at https://www.debian.org/doc/debian-policy/ch-archive.html#s-p
 echo -n "select installed package coverage (apt, required, important, or standard): "
 read MMVARIANT
 
-if [ "$MMSUITE" = buster ]; then
-  if echo "$MMARCH" | grep -q arm64; then
-    RASPIFIRMWARE=raspi-firmware/buster-backports,firmware-brcm80211/buster-backports,wireless-regdb/buster-backports
-  else  
-    RASPIFIRMWARE=raspi3-firmware,firmware-brcm80211,wireless-regdb
-  fi
-  else
-  RASPIFIRMWARE=raspi-firmware,firmware-brcm80211,wireless-regdb
-fi
+RASPIFIRMWARE=raspi-firmware,firmware-brcm80211,wireless-regdb
 
 if [ "$MMARCH" = armel ]; then
   KERNELPKG=linux-image-rpi
 elif [ "$MMARCH" = armhf ]; then
   KERNELPKG=linux-image-rt-armmp
 else
-  if [ "$MMSUITE" = buster ]; then
-    KERNELPKG=linux-image-rt-arm64/buster-backports
-  else
-    KERNELPKG=linux-image-rt-arm64
-  fi
+  KERNELPKG=linux-image-rt-arm64
 fi
 echo "Selected kernel package is $KERNELPKG."
 
@@ -181,23 +169,8 @@ if [ $FSTYPE = btrfs ]; then
 elif  [ $FSTYPE = ext4 ]; then
   mount -o async,lazytime,discard,noatime,nobarrier,commit=3600,delalloc,noauto_da_alloc,data=writeback ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 fi
-(
-  echo "deb http://deb.debian.org/debian/ $MMSUITE main non-free contrib"
-  if [ "$MMSUITE" = buster ]; then
-    echo "deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free"
-    echo "deb http://deb.debian.org/debian/ buster-updates main contrib non-free"
-    if echo "$MMARCH" | grep -q arm64; then
-      echo "deb http://deb.debian.org/debian/ buster-backports main contrib non-free"
-    fi
-  fi
-) | (
-  set -x
-  if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
-    mmdebstrap '--aptopt=APT::Default-Release "buster"' --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT} -
-  else
-    mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free" --include=${KERNELPKG},busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT}
-  fi
-)
+
+mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free non-free-firmware" --include=${KERNELPKG},zstd,busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT}
 
 mkfs.vfat -v -F 32 -n RASPIFIRM ${DEVFILE}${PARTCHAR}1
 mount -o async,discard,lazytime,noatime ${DEVFILE}${PARTCHAR}1 ${MNTFIRM}
@@ -368,21 +341,11 @@ if [ "$MMSUITE" != buster ]; then
 fi
 set +x
 
-if [ "$MMSUITE" = buster ] && echo "$MMARCH" | grep -q arm64; then
-  mv ${MNTROOT}/etc/apt/apt.conf.d/99mmdebstrap ${MNTROOT}/etc/apt/apt.conf
+if [ "$MMSUITE" = bullseye ]; then
   cat > ${MNTROOT}/etc/apt/sources.list <<EOF
-deb http://deb.debian.org/debian/ $MMSUITE main non-free contrib
-deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
-deb http://deb.debian.org/debian/ buster-updates main contrib non-free
-deb http://deb.debian.org/debian/ buster-backports main contrib non-free
-EOF
-  systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
-elif [ "$MMSUITE" = bullseye ]; then
-  cat > ${MNTROOT}/etc/apt/sources.list <<EOF
-deb http://deb.debian.org/debian bullseye main contrib non-free
-deb http://security.debian.org/ bullseye-security main contrib non-free
-deb http://deb.debian.org/debian bullseye-updates main contrib non-free
-deb http://deb.debian.org/debian bullseye-backports main contrib non-free
+deb https://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+deb https://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
 EOF
   systemd-nspawn -q -D ${MNTROOT} -a apt-get -q -y update
 fi
