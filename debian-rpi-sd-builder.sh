@@ -276,7 +276,7 @@ Name=${NETIF}
 [Network]
 DHCP=yes
 EOF
-    systemd-nspawn -q -D ${MNTROOT} -a systemctl enable systemd-networkd
+    systemd-nspawn -q -D ${MNTROOT} -a systemctl enable systemd-networkd systemd-resolved
     if [ $NETIF = wlan0 ]; then
       NETCONFIG="${NETCONFIG} and /etc/wpa_supplicant/wpa_supplicant-wlan0.conf"
       if [ -n "$REGDOM" ]; then
