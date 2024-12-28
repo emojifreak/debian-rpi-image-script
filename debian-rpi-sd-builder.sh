@@ -338,9 +338,6 @@ else
 fi
 
 
-if [ "$MMSUITE" != buster ]; then
-  systemd-nspawn -q -D ${MNTROOT} -a apt-get -y --purge --autoremove purge python2.7-minimal
-fi
 set +x
 
 if [ "$MMSUITE" = bullseye ]; then
