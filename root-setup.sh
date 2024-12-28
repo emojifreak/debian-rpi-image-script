@@ -144,6 +144,25 @@ KbdInteractiveAuthentication no
 UsePAM yes
 EOF
 
+cat /etc/systemd/system/rngd.service <<'EOF'
+[Unit]
+Description=Start entropy gathering daemon (rngd)
+Documentation=man:rngd(8)
+DefaultDependencies=no
+#After=local-fs.target
+After=systemd-udevd.service local-fs.target
+Requires=systemd-udevd.service
+Wants=systemd-random-seed.service
+AssertPathExists=/dev/hwrng
+AssertPathIsReadWrite=/dev/random
+
+[Service]
+ExecStart=/usr/sbin/rngd -f --rng-device=/dev/hwrng
+
+[Install]
+WantedBy=sysinit.target
+EOF
+
 apt-get -y --purge --autoremove --no-install-recommends install unzip fontconfig
 apt-get -y --purge --autoremove --no-install-recommends install emacs-nox emacs-el emacs-common-non-dfsg
 
