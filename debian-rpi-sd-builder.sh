@@ -167,10 +167,11 @@ fi
 if [ $FSTYPE = btrfs ]; then
   mount -o ssd,async,lazytime,discard,noatime,autodefrag,nobarrier,commit=3600,compress-force=lzo ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 elif  [ $FSTYPE = ext4 ]; then
+  tune2fs -e remount-ro -o journal_data_writeback -O fast_commit,metadata_csum,metadata_csum_seed
   mount -o async,lazytime,discard,noatime,nobarrier,commit=3600,delalloc,noauto_da_alloc,data=writeback ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 fi
 
-mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free non-free-firmware" --include=${KERNELPKG},zstd,busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT}
+mmdebstrap --architectures=$MMARCH --variant=$MMVARIANT --components="main contrib non-free non-free-firmware" --include=${KERNELPKG},usrmerge,zstd,busybox-static,debian-archive-keyring,systemd-sysv,udev,kmod,e2fsprogs,btrfs-progs,locales,tzdata,apt-utils,whiptail,wpasupplicant,${NETPKG},${RASPIFIRMWARE},firmware-linux-free,firmware-misc-nonfree,keyboard-configuration,console-setup,fake-hwclock  "$MMSUITE" ${MNTROOT}
 
 mkfs.vfat -v -F 32 -n RASPIFIRM ${DEVFILE}${PARTCHAR}1
 mount -o async,discard,lazytime,noatime ${DEVFILE}${PARTCHAR}1 ${MNTFIRM}
@@ -190,7 +191,7 @@ LABEL=RASPIFIRM /boot/firmware vfat rw,async,lazytime,discard 0 2
 EOF
 else
   cat >${MNTROOT}/etc/fstab <<EOF
-LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,discard 0 1
+LABEL=RASPIROOT / ${FSTYPE} rw,async,lazytime,strictatime,data=writeback,journal_async_commit,barrier 0 1
 LABEL=RASPIFIRM /boot/firmware vfat rw,async,lazytime,discard 0 2
 EOF
 fi
