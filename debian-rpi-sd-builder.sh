@@ -159,7 +159,7 @@ if [ $NETWORK = ifupdown ]; then
 elif [ $NETWORK = network-manager ]; then
   NETPKG=network-manager,crda
 elif [ $NETWORK = systemd-networkd ]; then
-  NETPKG=systemd,systemd-resolved
+  NETPKG=systemd,systemd-resolved,libnss-resolve
 else
   NETPKG=iproute2,iw
 fi
@@ -275,6 +275,7 @@ Name=${NETIF}
 
 [Network]
 DHCP=yes
+MulticastDNS=yes
 EOF
     systemd-nspawn -q -D ${MNTROOT} -a systemctl enable systemd-networkd systemd-resolved
     if [ $NETIF = wlan0 ]; then
@@ -372,7 +373,7 @@ if echo "$MMARCH" | fgrep -q arm64; then
   fi
 fi
 
-
+cp root-setup.sh ${MNTROOT}/root
 umount ${MNTROOT}/boot/firmware/
 umount ${MNTROOT}
 rm -rf ${MNTROOT} ${MNTFIRM}
