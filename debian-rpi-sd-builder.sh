@@ -341,7 +341,7 @@ fi
 
 set +x
 
-if [ "$MMSUITE" = bullseye ]; then
+if [ "$MMSUITE" = bookworm ]; then
   cat > ${MNTROOT}/etc/apt/sources.list <<EOF
 deb https://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
 deb https://security.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
