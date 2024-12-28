@@ -134,7 +134,7 @@ apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciut
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install postfix mailutils
 apt-get -y --purge --autoremove --install-recommends install task-japanese fonts-noto-cjk-extra 
-apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test #qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios eject parted arch-test iptables nftables dnsmasq-base rsync openssh-server xauth bc
+apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test eject parted iptables nftables openssh-server xauth bc #  dnsmasq-base rsync qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios 
 
 mkdir /etc/ssh/sshd_config.d
 cat >/etc/ssh/sshd_config.d/nopassword.conf <<EOF
