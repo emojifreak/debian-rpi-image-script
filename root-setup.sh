@@ -4,6 +4,62 @@
 echo "Please read this shell script before running it. Hit Enter to continue: "
 read tmpvar
 
+mkdir -p /etc/sysctl.d
+cat .>/etc/sysctl.d/local.conf <<'EOF'
+kernel.randomize_va_space=0
+#kernel.randomize_va_space=3
+kernel.latencytop=1
+kernel.unprivileged_bpf_disabled=0
+
+vm.mmap_rnd_bits=32
+vm.mmap_rnd_bits=18
+vm.mmap_rnd_compat_bits=11
+vm.mmap_min_addr=32678
+vm.swappiness=10
+vm.overcommit_memory=1
+#vm.unprivileged_userfaultfd = 0
+
+net.core.default_qdisc=noqueue
+net.core.fb_tunnels_only_for_init_net = 2
+net.core.devconf_inherit_init_net = 1
+net.core.bpf_jit_harden = 2
+
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_ecn=1
+net.ipv4.icmp_errors_use_inbound_ifaddr = 1
+net.ipv4.tcp_mtu_probing = 2
+net.ipv4.tcp_base_mss=1024
+net.ipv4.tcp_congestion_control = bbr
+net.ipv4.tcp_fastopen = 3
+net.ipv4.tcp_fastopen_blackhole_timeout_sec = 0
+net.ipv4.conf.default.rp_filter=1
+net.ipv4.conf.all.rp_filter=1
+net.ipv4.conf.default.accept_source_route = 0
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.default.log_martians = 0
+net.ipv4.conf.all.log_martians = 0
+net.ipv4.conf.default.arp_announce = 1
+net.ipv4.conf.all.arp_announce = 1
+net.ipv4.conf.default.arp_ignore = 2
+net.ipv4.conf.all.arp_ignore = 2
+net.ipv4.tcp_rfc1337 = 0
+net.ipv4.tcp_timestamps = 1
+net.ipv4.tcp_sack = 1
+net.ipv4.tcp_window_scaling=1
+
+net.ipv6.flowlabel_reflect = 7
+net.ipv6.fib_multipath_hash_policy = 2
+net.ipv6.seg6_flowlabel = 1
+net.ipv6.conf.default.accept_source_route = 0
+net.ipv6.conf.all.accept_source_route = 0
+fs.suid_dumpable = 0
+fs.protected_hardlinks = 1
+fs.protected_symlinks = 1
+fs.protected_fifos = 2
+fs.protected_regular = 2
+kernel.lock_stat=1
+EOF
+
 cat >/etc/environment <<EOF
 #http_proxy=http://192.168.1.2:3128/
 #https_proxy=http://192.168.1.2:3128/
