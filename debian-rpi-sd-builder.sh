@@ -167,7 +167,7 @@ fi
 if [ $FSTYPE = btrfs ]; then
   mount -o ssd,async,lazytime,discard,noatime,autodefrag,nobarrier,commit=3600,compress-force=lzo ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 elif  [ $FSTYPE = ext4 ]; then
-  tune2fs -e remount-ro -o journal_data_writeback -O fast_commit,metadata_csum,metadata_csum_seed
+  tune2fs -e remount-ro -o journal_data_writeback -O fast_commit,metadata_csum,metadata_csum_seed ${DEVFILE}${PARTCHAR}2
   mount -o async,lazytime,discard,noatime,nobarrier,commit=3600,delalloc,noauto_da_alloc,data=writeback ${DEVFILE}${PARTCHAR}2 ${MNTROOT}
 fi
 
