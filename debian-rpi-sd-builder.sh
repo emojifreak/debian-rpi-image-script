@@ -302,6 +302,8 @@ systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure tzdata
 systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure locales
 systemd-nspawn -q -D ${MNTROOT} -a dpkg-reconfigure keyboard-configuration
 systemd-nspawn -q -D ${MNTROOT} -a fake-hwclock save
+systemd-nspawn -q -D ${MNTROOT} -a systemctl disable systemd-journald-audit.socket
+systemd-nspawn -q -D ${MNTROOT} -a systemctl mask systemd-journald-audit.socket
 
 echo "rootfstype=$FSTYPE module_blacklist=snd_bcm2835" >${MNTROOT}/etc/default/raspi-extra-cmdline
 echo 'disable_fw_kms_setup=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
@@ -310,7 +312,6 @@ echo 'ROOTPART="LABEL=RASPIROOT"' >>${MNTROOT}/etc/default/raspi-firmware
 if echo $MMARCH | fgrep -q arm64; then
   echo 'KERNEL_ARCH="arm64"' >>${MNTROOT}/etc/default/raspi-firmware
   echo 'hdmi_enable_4kp60=1' >>${MNTROOT}/etc/default/raspi-firmware-custom
-  echo "rootfstype=$FSTYPE module_blacklist=snd_bcm2835" >${MNTROOT}/etc/default/raspi-extra-cmdline
 fi
 
 ln -s /dev/null ${MNTROOT}/etc/systemd/system/udisks2.service
