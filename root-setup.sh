@@ -190,7 +190,7 @@ apt-get -y --purge --autoremove --no-install-recommends install alsa-utils pciut
 apt-get -y --purge --autoremove --no-install-recommends install desktop-base xfonts-base
 apt-get -y --purge --autoremove --no-install-recommends install postfix mailutils
 apt-get -y --purge --autoremove --install-recommends install task-japanese fonts-noto-cjk-extra 
-apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower debian-keyring apparmor-utils apparmor mmdebstrap gpgv arch-test eject parted iptables nftables openssh-server xauth bc #  dnsmasq-base rsync qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios 
+apt-get -y --purge --autoremove --no-install-recommends install popularity-contest qemu-user-static binfmt-support reportbug unattended-upgrades rng-tools5 linux-cpupower apparmor-utils apparmor mmdebstrap gpgv arch-test eject parted nftables openssh-server xauth bc default-jre-headless # iptables dnsmasq-base rsync qemu-system-arm qemu-system-gui qemu-system-data qemu-utils qemu-efi-arm qemu-efi-aarch64 ipxe-qemu seabios 
 
 mkdir /etc/ssh/sshd_config.d
 cat >/etc/ssh/sshd_config.d/nopassword.conf <<EOF
@@ -198,6 +198,25 @@ PasswordAuthentication no
 ChallengeResponseAuthentication no
 KbdInteractiveAuthentication no
 UsePAM yes
+EOF
+
+mkdir /etc/systemd/system/ssh.service.d
+cat >/etc/systemd/system/ssh.service.d/after.conf <<'EOF'
+[Unit]
+After=network-online.target
+Requires=network-online.target
+
+[Service]
+OOMScoreAdjust=-1000
+Restart=always
+RestartPreventExitStatus=
+EOF
+
+mkdir /etc/systemd/system/wtmpdb-update-boot.service.d
+cat >/systemd/system/wtmpdb-update-boot.service/after.conf <<'EOF'
+[Unit]
+After=dbus.service
+Wants=dbus.service
 EOF
 
 cat /etc/systemd/system/rngd.service <<'EOF'
@@ -224,7 +243,7 @@ apt-get -y --purge --autoremove --no-install-recommends install emacs-nox emacs-
 
 apt-get -y --purge --autoremove --no-install-recommends install  libavcodec-extra libavfilter-extra va-driver-all vdpau-driver-all mesa-vulkan-drivers
 apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-module libcanberra-gtk3-module
-apt-get -y --purge --autoremove --no-install-recommends install accountsservice
+#apt-get -y --purge --autoremove --no-install-recommends install accountsservice
 
 #apt-get -y --purge --autoremove --install-recommends install tigervnc-standalone-server
 #apt-get -y --purge --autoremove --no-install-recommends install uim anthy uim-anthy uim-gtk2.0 uim-gtk3 uim-mozc uim-qt5 uim-xim im-config mozc-utils-gui xfonts-base
