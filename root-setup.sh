@@ -5,7 +5,7 @@ echo "Please read this shell script before running it. Hit Enter to continue: "
 read tmpvar
 
 mkdir -p /etc/sysctl.d
-cat .>/etc/sysctl.d/local.conf <<'EOF'
+cat >/etc/sysctl.d/local.conf <<'EOF'
 kernel.randomize_va_space=0
 #kernel.randomize_va_space=3
 kernel.latencytop=1
