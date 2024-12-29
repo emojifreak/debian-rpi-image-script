@@ -5,7 +5,7 @@ echo "Please read this shell script before running it. Hit Enter to continue: "
 read tmpvar
 
 mkdir -p /etc/sysctl.d
-cat >/etc/sysctl.d/local.conf <<'EOF'
+cat >/etc/sysctl.d/local.conf <<EOF
 kernel.randomize_va_space=0
 #kernel.randomize_va_space=3
 kernel.latencytop=1
@@ -154,14 +154,14 @@ jitterentropy_rng
 iproc_rng200
 EOF
 
-cat >/etc/udev/rules.d/60-block-scheduler.rules <<'EOF'
+cat >/etc/udev/rules.d/60-block-scheduler.rules <<EOF
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="sd[a-z]", ATTR{queue/scheduler}="bfq"
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="mmcblk[0-9]", ATTR{queue/scheduler}="bfq"
 ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="vd[a-z]", ATTR{queue/scheduler}="bfq"
 EOF
 
 mkdir /etc/systemd/system/apache2.conf.d
-cat >/etc/systemd/system/apache2.conf.d/after.conf <<'EOF'
+cat >/etc/systemd/system/apache2.conf.d/after.conf <<EOF
 [Unit]
 After=network-online.target
 Requires=network-online.target
@@ -201,7 +201,7 @@ UsePAM yes
 EOF
 
 mkdir /etc/systemd/system/ssh.service.d
-cat >/etc/systemd/system/ssh.service.d/after.conf <<'EOF'
+cat >/etc/systemd/system/ssh.service.d/after.conf <<EOF
 [Unit]
 After=network-online.target
 Requires=network-online.target
@@ -213,13 +213,13 @@ RestartPreventExitStatus=
 EOF
 
 mkdir /etc/systemd/system/wtmpdb-update-boot.service.d
-cat >/systemd/system/wtmpdb-update-boot.service/after.conf <<'EOF'
+cat >/systemd/system/wtmpdb-update-boot.service/after.conf <<EOF
 [Unit]
 After=dbus.service
 Wants=dbus.service
 EOF
 
-cat /etc/systemd/system/rngd.service <<'EOF'
+cat > /etc/systemd/system/rngd.service <<EOF
 [Unit]
 Description=Start entropy gathering daemon (rngd)
 Documentation=man:rngd(8)
@@ -259,12 +259,12 @@ set +x
 
 
 if true; then
-  cat >/etc/systemd/system/btrfsscrub.service <<'EOF'
+  cat >/etc/systemd/system/btrfsscrub.service <<EOF
 [Service]
 Type=oneshot
 ExecStart=/bin/btrfs scrub start -B -d /
 EOF
-  cat >/etc/systemd/system/btrfsscrub.timer <<'EOF'
+  cat >/etc/systemd/system/btrfsscrub.timer <<EOF
 [Timer]
 OnCalendar=*-*-* 05:00:00
 #Persistent=true
@@ -285,7 +285,6 @@ fi
 
 apt-get -y --purge --autoremove purge ifupdown isc-dhcp-client isc-dhcp-common
 
-exit 0
 echo -n "Ordinary login user: "
 read NONROOTUSER
 adduser $NONROOTUSER
