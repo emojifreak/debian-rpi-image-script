@@ -135,7 +135,6 @@ EOF
 cat >/etc/modules <<EOF
 reset_raspberrypi
 raspberrypi_cpufreq
-raspberrypi_hwmon
 bfq
 kyber-iosched
 tcp_bbr
@@ -146,7 +145,6 @@ EOF
 cat >/etc/initramfs-tools/modules <<EOF
 reset_raspberrypi
 raspberrypi_cpufreq
-raspberrypi_hwmon
 bfq
 kyber-iosched
 tcp_bbr
@@ -212,13 +210,6 @@ Restart=always
 RestartPreventExitStatus=
 EOF
 
-mkdir /etc/systemd/system/wtmpdb-update-boot.service.d
-cat >/systemd/system/wtmpdb-update-boot.service/after.conf <<EOF
-[Unit]
-After=dbus.service
-Wants=dbus.service
-EOF
-
 cat > /etc/systemd/system/rngd.service <<EOF
 [Unit]
 Description=Start entropy gathering daemon (rngd)
@@ -258,7 +249,7 @@ apt-get -y --purge --autoremove --no-install-recommends install appmenu-gtk3-mod
 set +x
 
 
-if true; then
+if false; then
   cat >/etc/systemd/system/btrfsscrub.service <<EOF
 [Service]
 Type=oneshot
@@ -275,13 +266,6 @@ WantedBy=timers.target
 EOF
   systemctl enable btrfsscrub.timer  
 fi
-
-#rm /etc/resolv.conf
-#cat >/etc/resolv.conf <<EOF
-#options inet6 edns0 trust-ad use-vc
-#nameserver 192.168.1.2
-#EOF
-#chmod a-w /etc/resolv.conf
 
 apt-get -y --purge --autoremove purge ifupdown isc-dhcp-client isc-dhcp-common
 
